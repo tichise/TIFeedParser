@@ -11,7 +11,7 @@ import AEXML
 
 class TIFeedParser {
     
-    public static func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
+    public func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
 
         Alamofire.request(.GET, urlString, parameters:nil)
             .response { request, response, xmlData, error  in
@@ -57,6 +57,7 @@ class TIFeedParser {
                     
                     let channel:Channel = Channel(title: title, link: link, description: description, items: items)
                     completionHandler(true, channel)
+                    
                     return
                 }
                 catch {
