@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/*.swift'
   s.requires_arc = true
   
-  spec.dependency 'AEXML'
-  spec.dependency 'Alamofire'
+  s.dependency 'AEXML'
+  s.dependency 'Alamofire'
 
 end
