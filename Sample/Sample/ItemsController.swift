@@ -52,7 +52,7 @@ class ItemsController: UITableViewController {
         
         let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
         
-        TIFeedParser.shared.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
             
             if (result) {
                 if (channel.title != nil) {

@@ -10,10 +10,8 @@ import Alamofire
 import AEXML
 
 public class TIFeedParser {
-
-    public static let shared = TIFeedParser()
     
-    public func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
+    public static func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
 
         Alamofire.request(.GET, urlString, parameters:nil)
             .response { request, response, xmlData, error  in
@@ -32,7 +30,7 @@ public class TIFeedParser {
                         let title:String = item["title"].value!
                         let link:String = item["link"].value!
                         let pubDateString:String = item["pubDate"].value!
-                        let pubDate:NSDate = self.stringFromDate(pubDateString)
+                        let pubDate:NSDate = stringFromDate(pubDateString)
                         
                         let description:String = item["description"].value!
                         
@@ -71,9 +69,8 @@ public class TIFeedParser {
         completionHandler(false, Channel())
     }
     
-    private func stringFromDate(dateString:String) -> NSDate {
+    private static func stringFromDate(dateString:String) -> NSDate {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "US")
         dateFormatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss Z"
         let date = dateFormatter.dateFromString(dateString)
         
