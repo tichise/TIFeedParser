@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Channel {
+public struct Channel {
     
     var title:String?
     var link:String?

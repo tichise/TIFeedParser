@@ -7,7 +7,7 @@
 
 import Foundation
 
-class Item {
+public struct Item {
     
     var title:String?
     var link:String?
