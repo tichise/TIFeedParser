@@ -54,9 +54,11 @@ class ItemsController: UITableViewController {
         
         TIFeedParser.shared.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
             
-            if (channel.title != nil) {
-                self.items = channel.items!
-                self.tableView.reloadData()
+            if (result) {
+                if (channel.title != nil) {
+                    self.items = channel.items!
+                    self.tableView.reloadData()
+                }
             }
         })
     }
