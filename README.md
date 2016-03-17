@@ -13,7 +13,6 @@ TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
             
             if (result) {
                 self.items = channel.items!
-                self.tableView.reloadData()
             }
         })
 ```
