@@ -15,5 +15,4 @@ Pod::Spec.new do |s|
   
   s.dependency 'AEXML'
   s.dependency 'Alamofire'
-
 end
