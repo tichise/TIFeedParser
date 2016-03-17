@@ -7,7 +7,15 @@ TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
 #### Examples
 
 ```
-
+        let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
+        
+        TIFeedParser.shared.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+            
+            if (channel.title != nil) {
+                self.items = channel.items!
+                self.tableView.reloadData()
+            }
+        })
 ```
 
 #### Installation (CocoaPods)
