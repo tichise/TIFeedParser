@@ -9,7 +9,9 @@ import Foundation
 import Alamofire
 import AEXML
 
-class TIFeedParser {
+public class TIFeedParser {
+
+    public static let shared = TIFeedParser()
     
     public func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
 
