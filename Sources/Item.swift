@@ -9,11 +9,11 @@ import Foundation
 
 public struct Item {
     
-    var title:String?
-    var link:String?
-    var pubDate:NSDate?
-    var description:String?
-    var thumbnail:String?
+    public internal(set) var title:String?
+    public internal(set) var link:String?
+    public internal(set) var pubDate:NSDate?
+    public internal(set) var description:String?
+    public internal(set) var thumbnail:String?
     
     init(title:String, link:String, pubDate:NSDate, description:String, thumbnail:String){
         

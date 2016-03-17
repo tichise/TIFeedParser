@@ -9,10 +9,10 @@ import Foundation
 
 public struct Channel {
     
-    var title:String?
-    var link:String?
-    var description:String?
-    var items:Array<Item>?
+    public internal(set) var title:String?
+    public internal(set) var link:String?
+    public internal(set) var description:String?
+    public internal(set) var items:Array<Item>?
     
     init() {}
     
