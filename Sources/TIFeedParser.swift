@@ -30,7 +30,7 @@ class TIFeedParser {
                         let title:String = item["title"].value!
                         let link:String = item["link"].value!
                         let pubDateString:String = item["pubDate"].value!
-                        let pubDate:NSDate = self.convertDate(pubDateString)
+                        let pubDate:NSDate = self.stringFromDate(pubDateString)
                         
                         let description:String = item["description"].value!
                         
@@ -68,7 +68,7 @@ class TIFeedParser {
         completionHandler(false, Channel())
     }
     
-    func convertDate(dateString:String) -> NSDate {
+    private func stringFromDate(dateString:String) -> NSDate {
         let dateFormatter = NSDateFormatter()
         dateFormatter.locale = NSLocale(localeIdentifier: "US")
         dateFormatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss Z"
