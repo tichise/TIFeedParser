@@ -52,12 +52,16 @@ class ItemsController: UITableViewController {
         
         let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
         
-        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             if (result) {
                 if (channel.title != nil) {
                     self.items = channel.items!
                     self.tableView.reloadData()
+                }
+            } else {
+                if (error != nil) {
+                    print(error?.localizedDescription)
                 }
             }
         })

@@ -27,7 +27,7 @@ class SampleTests: XCTestCase {
         let feedString:String = "http://pickup.calamel.jp/feed"
         // "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
         
-        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
             expectation.fulfill()
@@ -64,7 +64,7 @@ class SampleTests: XCTestCase {
         let expectation = expectationWithDescription("testRSS1.0")
         
         let feedString:String = "http://feeds.feedburner.com/hatena/b/hotentry"
-        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
             expectation.fulfill()
@@ -99,7 +99,7 @@ class SampleTests: XCTestCase {
         let expectation = expectationWithDescription("testAtom")
         
         let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
-        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
+        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
             expectation.fulfill()
