@@ -24,15 +24,12 @@ class SampleTests: XCTestCase {
     func testRSS2() {
         let expectation = expectationWithDescription("testRSS2.0")
         
-        let feedString:String = "http://pickup.calamel.jp/feed"
-        // "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
+        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
         
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
-            expectation.fulfill()
             
-            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -54,7 +51,6 @@ class SampleTests: XCTestCase {
                     expectation.fulfill()
                 }
             }
-            */
         })
         
         waitForExpectationsWithTimeout(5.0, handler: nil)
@@ -67,9 +63,7 @@ class SampleTests: XCTestCase {
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
-            expectation.fulfill()
             
-            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -78,7 +72,7 @@ class SampleTests: XCTestCase {
                 XCTAssertTrue(channel.items?.count > 0)
                 
                 let item:Item = channel.items![0]
-
+                
                 XCTAssertNotNil(item.title)
                 XCTAssertNotNil(item.link)
                 XCTAssertNotNil(item.description)
@@ -86,10 +80,11 @@ class SampleTests: XCTestCase {
                 
                 if (item.title != nil) {
                     print(item.title)
+                    
+                    XCTAssertTrue(true)
                     expectation.fulfill()
                 }
             }
-            */
         })
         
         waitForExpectationsWithTimeout(5.0, handler: nil)
@@ -102,9 +97,7 @@ class SampleTests: XCTestCase {
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             XCTAssertTrue(result)
-            expectation.fulfill()
             
-            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -121,10 +114,11 @@ class SampleTests: XCTestCase {
                 
                 if (item.title != nil) {
                     print(item.title)
+                    
+                    XCTAssertTrue(true)
                     expectation.fulfill()
                 }
             }
-            */
         })
         
         waitForExpectationsWithTimeout(5.0, handler: nil)
