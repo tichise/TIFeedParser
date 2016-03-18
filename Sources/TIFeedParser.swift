@@ -11,13 +11,14 @@ import AEXML
 
 public class TIFeedParser {
     
-    public static func parse(urlString:String, completionHandler: (Bool, Channel) -> Void) -> Void {
+    public static func parse(urlString:String, completionHandler: (Bool, Channel, NSError?) -> Void) -> Void {
 
         Alamofire.request(.GET, urlString, parameters:nil)
             .response { request, response, xmlData, error  in
                 
             if (error != nil) {
-                print(error?.debugDescription)
+                completionHandler(false, Channel(), error!)
+                return
             }
             
             if xmlData != nil {
@@ -56,22 +57,19 @@ public class TIFeedParser {
                     let description:String = xmlDoc.root["channel"]["description"].value!
                     
                     let channel:Channel = Channel(title: title, link: link, description: description, items: items)
-                    completionHandler(true, channel)
-                    
-                    return
+                    completionHandler(true, channel, nil)
                 }
-                catch {
-                    print("\(error)")
+                catch let error as NSError {
+                    completionHandler(false, Channel(), error)
                 }
+            } else {
+                completionHandler(false, Channel(), nil)
             }
         }
-        
-        completionHandler(false, Channel())
     }
     
     private static func stringFromDate(dateString:String) -> NSDate {
         let dateFormatter = NSDateFormatter()
-        dateFormatter.locale = NSLocale(localeIdentifier: "US")
         dateFormatter.dateFormat = "EEE, d MMM yyyy HH:mm:ss Z"
         let date = dateFormatter.dateFromString(dateString)
         
