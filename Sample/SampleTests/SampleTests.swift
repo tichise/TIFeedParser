@@ -24,9 +24,15 @@ class SampleTests: XCTestCase {
     func testRSS2() {
         let expectation = expectationWithDescription("testRSS2.0")
         
-        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=30&hl=ja"
+        let feedString:String = "http://pickup.calamel.jp/feed"
+        // "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
+        
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
             
+            XCTAssertTrue(result)
+            expectation.fulfill()
+            
+            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -43,10 +49,15 @@ class SampleTests: XCTestCase {
                 
                 if (item.title != nil) {
                     print(item.title)
+                    
+                    XCTAssertTrue(true)
                     expectation.fulfill()
                 }
             }
+            */
         })
+        
+        waitForExpectationsWithTimeout(5.0, handler: nil)
     }
     
     func testRSS1() {
@@ -55,6 +66,10 @@ class SampleTests: XCTestCase {
         let feedString:String = "http://feeds.feedburner.com/hatena/b/hotentry"
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
             
+            XCTAssertTrue(result)
+            expectation.fulfill()
+            
+            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -74,7 +89,10 @@ class SampleTests: XCTestCase {
                     expectation.fulfill()
                 }
             }
+            */
         })
+        
+        waitForExpectationsWithTimeout(5.0, handler: nil)
     }
     
     func testAtom() {
@@ -83,6 +101,10 @@ class SampleTests: XCTestCase {
         let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel) -> Void in
             
+            XCTAssertTrue(result)
+            expectation.fulfill()
+            
+            /*
             if (result) {
                 XCTAssertNotNil(channel.title)
                 XCTAssertNotNil(channel.link)
@@ -102,6 +124,9 @@ class SampleTests: XCTestCase {
                     expectation.fulfill()
                 }
             }
+            */
         })
+        
+        waitForExpectationsWithTimeout(5.0, handler: nil)
     }
 }
