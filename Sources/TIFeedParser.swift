@@ -79,13 +79,7 @@ public class TIFeedParser {
                             if (child.name == "channel") {
                                 existChannel = true
                             }
-                            print("children:"+child.name)
-                            
-                            /*
-                            childName = child.name
-                            */
                         }
-                        
                         
                         if (existChannel) {
                             // RSSの場合はエラーを出す
