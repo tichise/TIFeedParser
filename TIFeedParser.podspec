@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TIFeedParser'
-  s.version = '1.2'
+  s.version = '1.3'
   s.license = 'MIT'
   s.summary = 'TIFeedParser is an parser for RSS, built on Alamofire and AEXML.'
   s.homepage = 'https://github.com/tichise/TIFeedParser'
