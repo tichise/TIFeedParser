@@ -32,7 +32,7 @@ public class TIFeedParser {
                                 existChannel = true
                             }
                         }
-
+                        
                         
                         if (existChannel) {
                             
@@ -46,7 +46,6 @@ public class TIFeedParser {
                                 completionHandler(true, channel, nil)
                             }
                         } else {
-                            // atomの場合はエラーを出す
                             completionHandler(false, Channel(), error)
                         }
                     }
@@ -82,11 +81,11 @@ public class TIFeedParser {
                         }
                         
                         if (existChannel) {
-                            // RSSの場合はエラーを出す
                             completionHandler(false, Feed(), nil)
                         } else {
                             // atom
-                            completionHandler(true, Feed(), error)
+                            let feed = parseAtom(xmlDoc)
+                            completionHandler(true, feed, error)
                         }
                     }
                     catch let error as NSError {
@@ -168,13 +167,13 @@ public class TIFeedParser {
         var entries:Array<Entry> = Array()
         
         for entry in xmlDoc.root["entry"].all! {
-
+            
             let id:String = entry["id"].value!
             let title:String = entry["title"].value!
-            let link:String = entry["link"].value!
+            let link:String = entry["link"]["href"].value!
             
             let updatedString = entry["updated"].value!
-            let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
             
             let summary:String = entry["summary"].value!
             
@@ -182,10 +181,10 @@ public class TIFeedParser {
             let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)
             entries.append(entry)
         }
-
-        let id:String = xmlDoc.root["feed"]["id"].value!
-        let title:String = xmlDoc.root["feed"]["title"].value!
-        let updatedString = xmlDoc.root["feed"]["updated"].value!
+        
+        let id:String = xmlDoc.root["id"].value!
+        let title:String = xmlDoc.root["title"].value!
+        let updatedString = xmlDoc.root["updated"].value!
         let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
         
         let feed:Feed = Feed(id:id, title: title, updated:updated, entries: entries)
