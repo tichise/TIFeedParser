@@ -90,7 +90,7 @@ class ItemsController: UITableViewController {
     
     func pubDateStringFromDate(pubDate:NSDate)->String {
         let format = NSDateFormatter()
-        format.dateFormat = "yyyyM月d日 HH:mm"
+        format.dateFormat = "yyyy/M/d HH:mm"
         
         let pubDateString = format.stringFromDate(pubDate)
         return pubDateString
