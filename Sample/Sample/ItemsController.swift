@@ -14,11 +14,13 @@ import TIFeedParser
 class ItemsController: UITableViewController {
     
     var items : Array<Item> = []
+    var entries : Array<Entry> = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        loadFeeds()
+        loadRSS()
+        loadAtom()
     }
     
     override func didReceiveMemoryWarning() {
@@ -48,15 +50,34 @@ class ItemsController: UITableViewController {
         presentViewController(safariViewController, animated: true, completion: nil)
     }
     
-    func loadFeeds() {
+    func loadRSS() {
         
         let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
         
-        TIFeedParser.parse(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
+        TIFeedParser.parseRSS(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
             
             if (result) {
                 if (channel.title != nil) {
                     self.items = channel.items!
+                    self.tableView.reloadData()
+                }
+            } else {
+                if (error != nil) {
+                    print(error?.localizedDescription)
+                }
+            }
+        })
+    }
+    
+    func loadAtom() {
+        
+        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
+        
+        TIFeedParser.parseAtom(feedString, completionHandler: {(result:Bool, feed:Feed, error:NSError?) -> Void in
+            
+            if (result) {
+                if (feed.title != nil) {
+                    self.entries = feed.entries!
                     self.tableView.reloadData()
                 }
             } else {
