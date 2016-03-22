@@ -197,6 +197,7 @@ public class TIFeedParser {
     private static func stringFromDate(dateString:String, format:String) -> NSDate {
         let dateFormatter = NSDateFormatter()
         dateFormatter.dateFormat = format
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
         let date = dateFormatter.dateFromString(dateString)
         
         return date!
