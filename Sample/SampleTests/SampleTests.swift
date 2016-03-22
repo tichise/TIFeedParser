@@ -47,6 +47,7 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(item.title)
                     XCTAssertNotNil(item.link)
                     XCTAssertNotNil(item.description)
+                    XCTAssertNotNil(item.contentEncoded)
                     XCTAssertNotNil(item.thumbnail)
                     
                     print(item.title)
@@ -89,6 +90,7 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(item.title)
                     XCTAssertNotNil(item.link)
                     XCTAssertNotNil(item.description)
+                    XCTAssertNotNil(item.contentEncoded)
                     XCTAssertNotNil(item.thumbnail)
                     
                     print(item.title)
