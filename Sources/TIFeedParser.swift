@@ -111,8 +111,9 @@ public class TIFeedParser {
             let description:String = item["description"].value!
             
             let thumbnail:String = ""
+            let contentEncoded:String = ""
             
-            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, thumbnail:thumbnail)
+            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:thumbnail)
             items.append(item)
         }
         
@@ -136,6 +137,7 @@ public class TIFeedParser {
             let pubDate:NSDate = stringFromDate(pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
             
             let description:String = item["description"].value!
+            let contentEncoded:String = item["content:encoded"].value!
             
             var thumbnail:String = ""
             
@@ -150,7 +152,7 @@ public class TIFeedParser {
                 }
             }
             
-            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, thumbnail:thumbnail)
+            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail)
             items.append(item)
         }
         
