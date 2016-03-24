@@ -63,10 +63,10 @@ class ItemsController: UITableViewController {
                     return
                 }
                 
-                TIFeedParser.parseRSS(xmlData, completionHandler: {(isSuccess, channel, error) -> Void in
+                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
                     
                     if (isSuccess) {
-                        self.items = channel.items!
+                        self.items = channel!.items!
                         self.tableView.reloadData()
                     }
                     
@@ -88,10 +88,10 @@ class ItemsController: UITableViewController {
                     return
                 }
                 
-                TIFeedParser.parseAtom(xmlData, completionHandler: {(isSuccess, feed, error) -> Void in
+                TIFeedParser.parseAtom(xmlData!, completionHandler: {(isSuccess, feed, error) -> Void in
                     
                     if (isSuccess) {
-                        self.entries = feed.entries!
+                        self.entries = feed!.entries!
                         self.tableView.reloadData()
                     }
                     

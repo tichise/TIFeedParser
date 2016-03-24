@@ -96,20 +96,27 @@ public class TIFeedParser {
     private static func parseRSS1(xmlDoc:AEXMLDocument) -> Channel {
         var items:Array<Item> = Array()
         
-        for item in xmlDoc.root["item"].all! {
+        for itemObject in xmlDoc.root["item"].all! {
             
-            let title:String = item["title"].value!
-            let link:String = item["link"].value!
+            let title:String = itemObject["title"].value!
+            let link:String = itemObject["link"].value!
             
-            let dcDateString = item["dc:date"].value!
+            let dcDateString = itemObject["dc:date"].value!
             let dcDate:NSDate = stringFromDate(dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
-            let description:String = item["description"].value!
+            var description:String? = nil
             
-            let thumbnail:String = ""
-            let contentEncoded:String = ""
+            if itemObject["description"].value != nil {
+                description = itemObject["description"].value
+            }
             
-            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:thumbnail)
+            var contentEncoded:String? = nil
+            
+            if itemObject["content:encoded"].value != nil {
+                contentEncoded = itemObject["content:encoded"].value!
+            }
+            
+            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil)
             items.append(item)
         }
         
@@ -125,22 +132,31 @@ public class TIFeedParser {
     private static func parseRSS2(xmlDoc:AEXMLDocument) -> Channel {
         var items:Array<Item> = Array()
         
-        for item in xmlDoc.root["channel"]["item"].all! {
+        for itemObject in xmlDoc.root["channel"]["item"].all! {
             
-            let title:String = item["title"].value!
-            let link:String = item["link"].value!
-            let pubDateString:String = item["pubDate"].value!
+            let title:String = itemObject["title"].value!
+            let link:String = itemObject["link"].value!
+            let pubDateString:String = itemObject["pubDate"].value!
             let pubDate:NSDate = stringFromDate(pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
             
-            let description:String = item["description"].value!
-            let contentEncoded:String = item["content:encoded"].value!
+            var description:String? = nil
             
-            var thumbnail:String = ""
+            if itemObject["description"].value != nil {
+                description = itemObject["description"].value
+            }
             
-            if item["media:thumbnail"].value != nil {
+            var contentEncoded:String? = nil
+            
+            if itemObject["contentEncoded"].value != nil {
+                contentEncoded = itemObject["content:encoded"].value!
+            }
+            
+            var thumbnail:String? = nil
+            
+            if itemObject["media:thumbnail"].value != nil {
                 
-                if (item["media:thumbnail"].value! != "element <media:thumbnail> not found") {
-                    let mediaThumbnails:Array = item["media:thumbnail"].all!
+                if (itemObject["media:thumbnail"].value! != "element <media:thumbnail> not found") {
+                    let mediaThumbnails:Array = itemObject["media:thumbnail"].all!
                     
                     if (mediaThumbnails.count > 0) {
                         thumbnail = mediaThumbnails[1].attributes["url"]! as String
@@ -164,16 +180,16 @@ public class TIFeedParser {
     private static func parseAtom(xmlDoc:AEXMLDocument) -> Feed {
         var entries:Array<Entry> = Array()
         
-        for entry in xmlDoc.root["entry"].all! {
+        for entryObject in xmlDoc.root["entry"].all! {
             
-            let id:String = entry["id"].value!
-            let title:String = entry["title"].value!
-            let link:String = entry["link"]["href"].value!
+            let id:String = entryObject["id"].value!
+            let title:String = entryObject["title"].value!
+            let link:String = entryObject["link"]["href"].value!
             
-            let updatedString = entry["updated"].value!
+            let updatedString = entryObject["updated"].value!
             let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
             
-            let summary:String = entry["summary"].value!
+            let summary:String = entryObject["summary"].value!
             
             
             let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)

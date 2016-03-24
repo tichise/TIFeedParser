@@ -6,4 +6,4 @@ use_frameworks!
 source 'https://github.com/CocoaPods/Specs.git'
 
 pod 'TIFeedParser', :git => "https://github.com/tichise/TIFeedParser"
-pod 'Alamofire'
+pod 'Alamofire', '3.2.0'

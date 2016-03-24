@@ -25,7 +25,7 @@ class SampleTests: XCTestCase {
     func testRSS2() {
         let expectation = expectationWithDescription("testRSS2.0")
         
-        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
+        let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
         
         
         Alamofire.request(.GET, feedUrlString, parameters:nil)
@@ -35,29 +35,29 @@ class SampleTests: XCTestCase {
                     return
                 }
                 
-                TIFeedParser.parseRSS(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
+                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
                     
-                    XCTAssertTrue(result)
+                    XCTAssertTrue(isSuccess)
                     
-                    if (result) {
-                        XCTAssertNotNil(channel.title)
-                        XCTAssertNotNil(channel.link)
-                        XCTAssertNotNil(channel.description)
-                        XCTAssertNotNil(channel.items)
-                        XCTAssertTrue(channel.items?.count > 0)
+                    if (isSuccess) {
+                        XCTAssertNotNil(channel!.title)
+                        XCTAssertNotNil(channel!.link)
+                        XCTAssertNotNil(channel!.description)
+                        XCTAssertNotNil(channel!.items)
+                        XCTAssertTrue(channel!.items?.count > 0)
                         
-                        print(channel.title)
-                        print(channel.link)
-                        print(channel.description)
+                        print(channel!.title)
+                        print(channel!.link)
+                        print(channel!.description)
                         
-                        let item:Item = channel.items![0]
+                        let item:Item = channel!.items![0]
                         
                         if (item.title != nil) {
                             XCTAssertNotNil(item.title)
                             XCTAssertNotNil(item.link)
                             XCTAssertNotNil(item.description)
                             XCTAssertNotNil(item.contentEncoded)
-                            XCTAssertNotNil(item.thumbnail)
+                            // XCTAssertNotNil(item.thumbnail)
                             
                             print(item.title)
                             print(item.link)
@@ -87,30 +87,29 @@ class SampleTests: XCTestCase {
                 }
                 
                 
-                TIFeedParser.parseRSS(xmlData, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
+                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
                     
-                    XCTAssertTrue(result)
+                    XCTAssertTrue(isSuccess)
                     
-                    if (result) {
-                        XCTAssertNotNil(channel.title)
-                        XCTAssertNotNil(channel.link)
-                        XCTAssertNotNil(channel.description)
-                        XCTAssertNotNil(channel.items)
+                    if (isSuccess) {
+                        XCTAssertNotNil(channel!.title)
+                        XCTAssertNotNil(channel!.link)
+                        XCTAssertNotNil(channel!.description)
+                        XCTAssertNotNil(channel!.items)
                         
-                        print(channel.title)
-                        print(channel.link)
-                        print(channel.description)
+                        print(channel!.title)
+                        print(channel!.link)
+                        print(channel!.description)
                         
-                        XCTAssertTrue(channel.items?.count > 0)
+                        XCTAssertTrue(channel!.items?.count > 0)
                         
-                        let item:Item = channel.items![0]
+                        let item:Item = channel!.items![0]
                         
                         if (item.title != nil) {
                             XCTAssertNotNil(item.title)
                             XCTAssertNotNil(item.link)
-                            XCTAssertNotNil(item.description)
+                            // XCTAssertNotNil(item.description)
                             XCTAssertNotNil(item.contentEncoded)
-                            XCTAssertNotNil(item.thumbnail)
                             
                             print(item.title)
                             print(item.link)
@@ -130,7 +129,7 @@ class SampleTests: XCTestCase {
     func testAtom() {
         let expectation = expectationWithDescription("testAtom")
         
-        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
+        let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
         Alamofire.request(.GET, feedUrlString, parameters:nil)
             .response {request, response, xmlData, error  in
@@ -139,23 +138,23 @@ class SampleTests: XCTestCase {
                     return
                 }
                 
-                TIFeedParser.parseAtom(feedString, completionHandler: {(result:Bool, feed:Feed, error:NSError?) -> Void in
+                TIFeedParser.parseAtom(xmlData!, completionHandler: {(isSuccess, feed, error) -> Void in
                     
-                    XCTAssertTrue(result)
+                    XCTAssertTrue(isSuccess)
                     
-                    if (result) {
-                        XCTAssertNotNil(feed.id)
-                        XCTAssertNotNil(feed.title)
-                        XCTAssertNotNil(feed.updated)
+                    if (isSuccess) {
+                        XCTAssertNotNil(feed!.id)
+                        XCTAssertNotNil(feed!.title)
+                        XCTAssertNotNil(feed!.updated)
                         
-                        print(feed.id)
-                        print(feed.title)
-                        print(feed.updated)
+                        print(feed!.id)
+                        print(feed!.title)
+                        print(feed!.updated)
                         
-                        XCTAssertNotNil(feed.entries)
-                        XCTAssertTrue(feed.entries?.count > 0)
+                        XCTAssertNotNil(feed!.entries)
+                        XCTAssertTrue(feed!.entries?.count > 0)
                         
-                        let entry:Entry = feed.entries![0]
+                        let entry:Entry = feed!.entries![0]
                         
                         if (entry.title != nil) {
                             XCTAssertNotNil(entry.id)
