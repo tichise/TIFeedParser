@@ -6,17 +6,11 @@
 //
 
 import Foundation
-import Alamofire
 import AEXML
 
 public class TIFeedParser {
     
-    public static func parseRSS(urlString:String, completionHandler: (Bool, Channel, NSError?) -> Void) -> Void {
-        
-        if xmlData == nil {
-            completionHandler(false, Channel(), nil)
-            return
-        }
+    public static func parseRSS(xmlData:NSData, completionHandler: (Bool, Channel?, NSError?) -> Void) -> Void {
         
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
         dispatch_async(dispatch_get_global_queue(priority, 0)) {
@@ -51,25 +45,19 @@ public class TIFeedParser {
                     }
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
-                        completionHandler(false, Channel(), error)
+                        completionHandler(false, nil, error)
                     }
                 }
             }
             catch let error as NSError {
                 dispatch_async(dispatch_get_main_queue()) {
-                    completionHandler(false, Channel(), error)
+                    completionHandler(false, nil, error)
                 }
             }
         }
     }
     
-    public static func parseAtom(urlString:String, completionHandler: (Bool, Feed, NSError?) -> Void) -> Void {
-        
-        if xmlData == nil {
-            completionHandler(false, Channel(), nil)
-            return
-        }
-        
+    public static func parseAtom(xmlData:NSData, completionHandler: (Bool, Feed?, NSError?) -> Void) -> Void {
         
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
         dispatch_async(dispatch_get_global_queue(priority, 0)) {
@@ -100,12 +88,12 @@ public class TIFeedParser {
                 }
                 catch let error as NSError {
                     dispatch_async(dispatch_get_main_queue()) {
-                        completionHandler(false, Feed(), error)
+                        completionHandler(false, nil, error)
                     }
                 }
             } else {
                 dispatch_async(dispatch_get_main_queue()) {
-                    completionHandler(false, Feed(), error)
+                    completionHandler(false, nil, error)
                 }
             }
         }
