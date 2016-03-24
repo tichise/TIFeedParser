@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
   s.name = 'TIFeedParser'
   s.version = '1.6'
   s.license = 'MIT'
-  s.summary = 'TIFeedParser is an parser for RSS, built on Alamofire and AEXML.'
+  s.summary = 'TIFeedParser is an parser for RSS, built on AEXML.'
   s.homepage = 'https://github.com/tichise/TIFeedParser'
   s.social_media_url = 'http://twitter.com/tichise'
   s.author = "Takuya Ichise"
@@ -13,5 +13,5 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/*.swift'
   s.requires_arc = true
   
-  s.dependency 'Alamofire'
+  s.dependency 'AEXML'
 end
