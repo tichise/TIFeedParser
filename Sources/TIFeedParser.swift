@@ -6,94 +6,90 @@
 //
 
 import Foundation
-import Alamofire
 import AEXML
 
 public class TIFeedParser {
     
-    public static func parseRSS(urlString:String, completionHandler: (Bool, Channel, NSError?) -> Void) -> Void {
+    public static func parseRSS(xmlData:NSData, completionHandler: (Bool, Channel?, NSError?) -> Void) -> Void {
         
-        Alamofire.request(.GET, urlString, parameters:nil)
-            .response { request, response, xmlData, error  in
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+            
+            do {
+                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
                 
-                if (error != nil) {
-                    completionHandler(false, Channel(), error!)
-                    return
+                var existChannel = false
+                
+                for child in xmlDoc.root.children {
+                    if (child.name == "channel") {
+                        existChannel = true
+                    }
                 }
                 
-                if xmlData != nil {
-                    do {
-                        let xmlDoc = try AEXMLDocument(xmlData: xmlData!)
+                
+                if (existChannel) {
+                    if (xmlDoc.root.children.count == 1) {
+                        // rss2.0
+                        let channel = parseRSS2(xmlDoc)
                         
-                        var existChannel = false
-                        
-                        for child in xmlDoc.root.children {
-                            if (child.name == "channel") {
-                                existChannel = true
-                            }
+                        dispatch_async(dispatch_get_main_queue()) {
+                            completionHandler(true, channel, nil)
                         }
+                    } else {
+                        // rss1.0
+                        let channel = parseRSS1(xmlDoc)
                         
-                        
-                        if (existChannel) {
-                            
-                            if (xmlDoc.root.children.count == 1) {
-                                // rss2.0
-                                let channel = parseRSS2(xmlDoc)
-                                completionHandler(true, channel, nil)
-                            } else {
-                                // rss1.0
-                                let channel = parseRSS1(xmlDoc)
-                                completionHandler(true, channel, nil)
-                            }
-                        } else {
-                            completionHandler(false, Channel(), error)
+                        dispatch_async(dispatch_get_main_queue()) {
+                            completionHandler(true, channel, nil)
                         }
-                    }
-                    catch let error as NSError {
-                        completionHandler(false, Channel(), error)
                     }
                 } else {
-                    completionHandler(false, Channel(), nil)
+                    dispatch_async(dispatch_get_main_queue()) {
+                        completionHandler(false, nil, nil)
+                    }
                 }
+            }
+            catch let error as NSError {
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(false, nil, error)
+                }
+            }
         }
     }
     
-    public static func parseAtom(urlString:String, completionHandler: (Bool, Feed, NSError?) -> Void) -> Void {
+    public static func parseAtom(xmlData:NSData, completionHandler: (Bool, Feed?, NSError?) -> Void) -> Void {
         
-        Alamofire.request(.GET, urlString, parameters:nil)
-            .response { request, response, xmlData, error  in
+        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
+        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+            do {
+                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
                 
-                if (error != nil) {
-                    completionHandler(false, Feed(), error!)
-                    return
+                var existChannel = false
+                
+                for child in xmlDoc.root.children {
+                    if (child.name == "channel") {
+                        existChannel = true
+                    }
                 }
                 
-                if xmlData != nil {
-                    do {
-                        let xmlDoc = try AEXMLDocument(xmlData: xmlData!)
-                        
-                        var existChannel = false
-                        
-                        for child in xmlDoc.root.children {
-                            if (child.name == "channel") {
-                                existChannel = true
-                            }
-                        }
-                        
-                        if (existChannel) {
-                            completionHandler(false, Feed(), nil)
-                        } else {
-                            // atom
-                            let feed = parseAtom(xmlDoc)
-                            completionHandler(true, feed, error)
-                        }
-                    }
-                    catch let error as NSError {
-                        completionHandler(false, Feed(), error)
+                if (existChannel) {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        completionHandler(false, nil, nil)
                     }
                 } else {
-                    completionHandler(false, Feed(), nil)
+                    // atom
+                    let feed = parseAtom(xmlDoc)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        completionHandler(true, feed, nil)
+                    }
                 }
+            }
+            catch let error as NSError {
+                dispatch_async(dispatch_get_main_queue()) {
+                    completionHandler(false, nil, error)
+                }
+            }
         }
     }
     
