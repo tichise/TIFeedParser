@@ -16,7 +16,7 @@ public class TIFeedParser {
         dispatch_async(dispatch_get_global_queue(priority, 0)) {
             
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData!)
+                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
                 
                 var existChannel = false
                 
@@ -45,7 +45,7 @@ public class TIFeedParser {
                     }
                 } else {
                     dispatch_async(dispatch_get_main_queue()) {
-                        completionHandler(false, nil, error)
+                        completionHandler(false, nil, nil)
                     }
                 }
             }
@@ -61,37 +61,31 @@ public class TIFeedParser {
         
         let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
         dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            if xmlData != nil {
-                do {
-                    let xmlDoc = try AEXMLDocument(xmlData: xmlData!)
-                    
-                    var existChannel = false
-                    
-                    for child in xmlDoc.root.children {
-                        if (child.name == "channel") {
-                            existChannel = true
-                        }
-                    }
-                    
-                    if (existChannel) {
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(false, Feed(), nil)
-                        }
-                    } else {
-                        // atom
-                        let feed = parseAtom(xmlDoc)
-                        
-                        dispatch_async(dispatch_get_main_queue()) {
-                            completionHandler(true, feed, error)
-                        }
+            do {
+                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
+                
+                var existChannel = false
+                
+                for child in xmlDoc.root.children {
+                    if (child.name == "channel") {
+                        existChannel = true
                     }
                 }
-                catch let error as NSError {
+                
+                if (existChannel) {
                     dispatch_async(dispatch_get_main_queue()) {
-                        completionHandler(false, nil, error)
+                        completionHandler(false, nil, nil)
+                    }
+                } else {
+                    // atom
+                    let feed = parseAtom(xmlDoc)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        completionHandler(true, feed, nil)
                     }
                 }
-            } else {
+            }
+            catch let error as NSError {
                 dispatch_async(dispatch_get_main_queue()) {
                     completionHandler(false, nil, error)
                 }
