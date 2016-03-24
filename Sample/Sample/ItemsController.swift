@@ -10,6 +10,7 @@
 import UIKit
 import SafariServices
 import TIFeedParser
+import Alamofire
 
 class ItemsController: UITableViewController {
     
@@ -52,40 +53,53 @@ class ItemsController: UITableViewController {
     
     func loadRSS() {
         
-        let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
+        let feedUrlString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
         
-        TIFeedParser.parseRSS(feedString, completionHandler: {(result:Bool, channel:Channel, error:NSError?) -> Void in
-            
-            if (result) {
-                if (channel.title != nil) {
-                    self.items = channel.items!
-                    self.tableView.reloadData()
+        
+        Alamofire.request(.GET, feedUrlString, parameters:nil)
+            .response {request, response, xmlData, error  in
+                
+                if (xmlData == nil) {
+                    return
                 }
-            } else {
-                if (error != nil) {
-                    print(error?.localizedDescription)
-                }
-            }
-        })
+                
+                TIFeedParser.parseRSS(xmlData, completionHandler: {(isSuccess, channel, error) -> Void in
+                    
+                    if (isSuccess) {
+                        self.items = channel.items!
+                        self.tableView.reloadData()
+                    }
+                    
+                    if (error != nil) {
+                        print(error?.localizedDescription)
+                    }
+                })
+        }
     }
     
     func loadAtom() {
         
-        let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
+        let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
-        TIFeedParser.parseAtom(feedString, completionHandler: {(result:Bool, feed:Feed, error:NSError?) -> Void in
-            
-            if (result) {
-                if (feed.title != nil) {
-                    self.entries = feed.entries!
-                    self.tableView.reloadData()
+        Alamofire.request(.GET, feedUrlString, parameters:nil)
+            .response {request, response, xmlData, error  in
+                
+                if (xmlData == nil) {
+                    return
                 }
-            } else {
-                if (error != nil) {
-                    print(error?.localizedDescription)
-                }
-            }
-        })
+                
+                TIFeedParser.parseAtom(xmlData, completionHandler: {(isSuccess, feed, error) -> Void in
+                    
+                    if (isSuccess) {
+                        self.entries = feed.entries!
+                        self.tableView.reloadData()
+                    }
+                    
+                    if (error != nil) {
+                        print(error?.localizedDescription)
+                    }
+                })
+        }
     }
     
     func pubDateStringFromDate(pubDate:NSDate)->String {
