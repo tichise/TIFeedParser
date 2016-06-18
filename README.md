@@ -24,10 +24,10 @@ TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
                     if (isSuccess) {
                         // self.items = channel.items!
                         // self.tableView.reloadData()
-                    }
-                    
-                    if (error != nil) {
-                        print(error?.localizedDescription)
+                    } else {
+                        if (error != nil) {
+                            print(error?.localizedDescription)
+                        }
                     }
                 })
         }
@@ -52,10 +52,10 @@ TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
                     if (isSuccess) {
                         // self.entries = feed.entries!
                         // self.tableView.reloadData()
-                    }
-                    
-                    if (error != nil) {
-                        print(error?.localizedDescription)
+                    } else {
+                        if (error != nil) {
+                            print(error?.localizedDescription)
+                        }
                     }
                 })
         }
