@@ -3,6 +3,8 @@
 
 TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
 
+TIFeedParserはSwiftで書かれた非常にシンプルなRSSパーサーです。Atom、RSS1.0、RSS2.0に対応しています。cocoapodsからダウンロードして使えます。詳細な使い方は[こちら](http://qiita.com/tichise/items/b9f55ce924159f4ad0cd)に記載してます。
+
 
 #### Examples
 
