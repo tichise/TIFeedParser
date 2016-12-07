@@ -1,0 +1,30 @@
+{
+  "DVTSourceControlWorkspaceBlueprintPrimaryRemoteRepositoryKey" : "E23DB9581093C9A4952889F3E1C78193392C6B74",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyRepositoryLocationsKey" : {
+
+  },
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyStatesKey" : {
+    "B29C9BE29276DCF23B62769AC6DF848F4EE98D5B" : 9223372036854775807,
+    "E23DB9581093C9A4952889F3E1C78193392C6B74" : 9223372036854775807
+  },
+  "DVTSourceControlWorkspaceBlueprintIdentifierKey" : "2AC6BDD0-D37E-4F2B-AE5E-772740B6F03C",
+  "DVTSourceControlWorkspaceBlueprintWorkingCopyPathsKey" : {
+    "B29C9BE29276DCF23B62769AC6DF848F4EE98D5B" : "..\/..",
+    "E23DB9581093C9A4952889F3E1C78193392C6B74" : "TIFeedParser\/"
+  },
+  "DVTSourceControlWorkspaceBlueprintNameKey" : "TIFeedParser",
+  "DVTSourceControlWorkspaceBlueprintVersion" : 204,
+  "DVTSourceControlWorkspaceBlueprintRelativePathToProjectKey" : "TIFeedParser.xcodeproj",
+  "DVTSourceControlWorkspaceBlueprintRemoteRepositoriesKey" : [
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "bitbucket.org:lifemeal\/lifemeal-ios.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "B29C9BE29276DCF23B62769AC6DF848F4EE98D5B"
+    },
+    {
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryURLKey" : "https:\/\/github.com\/tichise\/TIFeedParser.git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositorySystemKey" : "com.apple.dt.Xcode.sourcecontrol.Git",
+      "DVTSourceControlWorkspaceBlueprintRemoteRepositoryIdentifierKey" : "E23DB9581093C9A4952889F3E1C78193392C6B74"
+    }
+  ]
+}

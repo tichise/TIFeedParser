@@ -20,8 +20,8 @@ DerivedData
 *.xcuserstate
 
 # Carthage
-Carthage/Build
+Carthage
 Sample/Podfile.lock
 Sample/Pods/*
-
+Sample/
 Sample/Sample.xcworkspace/contents.xcworkspacedata
