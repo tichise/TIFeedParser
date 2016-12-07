@@ -11,12 +11,12 @@ public struct Feed {
 
     public internal(set) var id:String?
     public internal(set) var title:String?
-    public internal(set) var updated:NSDate?
+    public internal(set) var updated:Date?
     public internal(set) var entries:Array<Entry>?
     
     init() {}
     
-    init(id:String, title:String, updated:NSDate, entries:Array<Entry>){
+    init(id:String, title:String, updated:Date, entries:Array<Entry>){
 
         self.id = id
         self.title = title
