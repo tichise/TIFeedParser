@@ -2,7 +2,7 @@ target 'Sample' do
   use_frameworks!
 
   pod 'TIFeedParser', :path => '../'
-  pod 'Alamofire', '3.2.0'
+  pod 'Alamofire'
 
   target 'SampleTests' do
     inherit! :search_paths
