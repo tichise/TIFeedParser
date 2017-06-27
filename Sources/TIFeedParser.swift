@@ -16,7 +16,7 @@ public class TIFeedParser {
         DispatchQueue.global(qos: .default).async {
             // サブスレッド(バックグラウンド)で実行する方を書く
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
+                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
                 var existChannel = false
                 
@@ -30,14 +30,14 @@ public class TIFeedParser {
                 if (existChannel) {
                     if (xmlDoc.root.children.count == 1) {
                         // rss2.0
-                        let channel = parseRSS2(xmlDoc)
+                        let channel = parseRSS2(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
                         }
                     } else {
                         // rss1.0
-                        let channel = parseRSS1(xmlDoc)
+                        let channel = parseRSS1(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
@@ -62,7 +62,7 @@ public class TIFeedParser {
         
         DispatchQueue.global(qos: .default).async {
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData, options: nil)
+                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
                 var existChannel = false
                 
@@ -78,7 +78,7 @@ public class TIFeedParser {
                     }
                 } else {
                     // atom
-                    let feed = parseAtom(xmlDoc)
+                    let feed = parseAtom(xmlDoc: xmlDoc)
                     
                     DispatchQueue.main.async {
                         completionHandler(true, feed, nil)
