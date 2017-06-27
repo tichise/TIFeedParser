@@ -28,12 +28,12 @@ class ItemsController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ItemCell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
         
         let item:Item = self.items[indexPath.row]
         cell.textLabel?.text = item.title
@@ -42,13 +42,13 @@ class ItemsController: UITableViewController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let item = self.items[indexPath.row]
         
-        let url:NSURL = NSURL(string: item.link!)!
-        let safariViewController = SFSafariViewController(URL: url, entersReaderIfAvailable: true)
-        presentViewController(safariViewController, animated: true, completion: nil)
+        let url:URL = URL(string: item.link!)!
+        let safariViewController = SFSafariViewController(url: url, entersReaderIfAvailable: true)
+        present(safariViewController, animated: true, completion: nil)
     }
     
     func loadRSS() {
@@ -102,11 +102,11 @@ class ItemsController: UITableViewController {
         }
     }
     
-    func pubDateStringFromDate(pubDate:NSDate)->String {
-        let format = NSDateFormatter()
+    func pubDateStringFromDate(_ pubDate:Date)->String {
+        let format = DateFormatter()
         format.dateFormat = "yyyy/M/d HH:mm"
         
-        let pubDateString = format.stringFromDate(pubDate)
+        let pubDateString = format.string(from: pubDate)
         return pubDateString
     }
 }

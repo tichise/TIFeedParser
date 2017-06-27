@@ -10,11 +10,11 @@ import AEXML
 
 public class TIFeedParser {
     
-    public static func parseRSS(xmlData:NSData, completionHandler: (Bool, Channel?, NSError?) -> Void) -> Void {
+    public static func parseRSS(xmlData:NSData, completionHandler: @escaping (Bool, Channel?, NSError?) -> Void) -> Void {
         
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            
+        
+        DispatchQueue.global(qos: .default).async {
+            // サブスレッド(バックグラウンド)で実行する方を書く
             do {
                 let xmlDoc = try AEXMLDocument(xmlData: xmlData)
                 
@@ -32,37 +32,37 @@ public class TIFeedParser {
                         // rss2.0
                         let channel = parseRSS2(xmlDoc)
                         
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
                         }
                     } else {
                         // rss1.0
                         let channel = parseRSS1(xmlDoc)
                         
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
                         }
                     }
                 } else {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(false, nil, nil)
                     }
                 }
             }
             catch let error as NSError {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     completionHandler(false, nil, error)
+
                 }
             }
         }
     }
     
-    public static func parseAtom(xmlData:NSData, completionHandler: (Bool, Feed?, NSError?) -> Void) -> Void {
+    public static func parseAtom(xmlData:NSData, completionHandler: @escaping (Bool, Feed?, NSError?) -> Void) -> Void {
         
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+        DispatchQueue.global(qos: .default).async {
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
+                let xmlDoc = try AEXMLDocument(xmlData: xmlData, options: nil)
                 
                 var existChannel = false
                 
@@ -73,20 +73,20 @@ public class TIFeedParser {
                 }
                 
                 if (existChannel) {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(false, nil, nil)
                     }
                 } else {
                     // atom
                     let feed = parseAtom(xmlDoc)
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(true, feed, nil)
                     }
                 }
             }
             catch let error as NSError {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     completionHandler(false, nil, error)
                 }
             }
@@ -102,7 +102,7 @@ public class TIFeedParser {
             let link:String = itemObject["link"].value!
             
             let dcDateString = itemObject["dc:date"].value!
-            let dcDate:NSDate = stringFromDate(dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            let dcDate:NSDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
             var description:String? = nil
             
@@ -137,7 +137,7 @@ public class TIFeedParser {
             let title:String = itemObject["title"].value!
             let link:String = itemObject["link"].value!
             let pubDateString:String = itemObject["pubDate"].value!
-            let pubDate:NSDate = stringFromDate(pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
+            let pubDate:NSDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
             
             var description:String? = nil
             
@@ -187,7 +187,7 @@ public class TIFeedParser {
             let link:String = entryObject["link"]["href"].value!
             
             let updatedString = entryObject["updated"].value!
-            let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
+            let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
             
             let summary:String = entryObject["summary"].value!
             
@@ -199,7 +199,7 @@ public class TIFeedParser {
         let id:String = xmlDoc.root["id"].value!
         let title:String = xmlDoc.root["title"].value!
         let updatedString = xmlDoc.root["updated"].value!
-        let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+        let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
         
         let feed:Feed = Feed(id:id, title: title, updated:updated, entries: entries)
         
@@ -207,11 +207,11 @@ public class TIFeedParser {
     }
     
     private static func stringFromDate(dateString:String, format:String) -> NSDate {
-        let dateFormatter = NSDateFormatter()
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
-        let date = dateFormatter.dateFromString(dateString)
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US") as Locale!
+        let date = dateFormatter.date(from: dateString)
         
-        return date!
+        return date! as NSDate
     }
 }

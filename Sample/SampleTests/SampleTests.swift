@@ -23,7 +23,7 @@ class SampleTests: XCTestCase {
     }
     
     func testRSS2() {
-        let expectation = expectationWithDescription("testRSS2.0")
+        let expectation = self.expectation(description: "testRSS2.0")
         
         let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
         
@@ -71,11 +71,11 @@ class SampleTests: XCTestCase {
                 })
         }
         
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
     
     func testRSS1() {
-        let expectation = expectationWithDescription("testRSS1.0")
+        let expectation = self.expectation(description: "testRSS1.0")
         
         let feedUrlString:String = "http://feeds.feedburner.com/hatena/b/hotentry"
         
@@ -123,11 +123,11 @@ class SampleTests: XCTestCase {
                 })
         }
         
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
     
     func testAtom() {
-        let expectation = expectationWithDescription("testAtom")
+        let expectation = self.expectation(description: "testAtom")
         
         let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
@@ -174,6 +174,6 @@ class SampleTests: XCTestCase {
                 })
         }
         
-        waitForExpectationsWithTimeout(5.0, handler: nil)
+        waitForExpectations(timeout: 5.0, handler: nil)
     }
 }
