@@ -27,15 +27,10 @@ class SampleTests: XCTestCase {
         
         let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=rss&num=3&hl=ja"
         
-        
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
-            .response {request, response, xmlData, error  in
+        Alamofire.request(feedUrlString).response { response in
+            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
                 
-                if (xmlData == nil) {
-                    return
-                }
-                
-                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
+                TIFeedParser.parseRSS(xmlData: data as NSData, completionHandler: {(isSuccess, channel, error) -> Void in
                     
                     XCTAssertTrue(isSuccess)
                     
@@ -44,7 +39,7 @@ class SampleTests: XCTestCase {
                         XCTAssertNotNil(channel!.link)
                         XCTAssertNotNil(channel!.description)
                         XCTAssertNotNil(channel!.items)
-                        XCTAssertTrue(channel!.items?.count > 0)
+                        XCTAssertTrue((channel!.items?.count)! > 0)
                         
                         print(channel!.title)
                         print(channel!.link)
@@ -57,37 +52,36 @@ class SampleTests: XCTestCase {
                             XCTAssertNotNil(item.link)
                             XCTAssertNotNil(item.description)
                             XCTAssertNotNil(item.contentEncoded)
+                            XCTAssertNotNil(item.categories)
                             // XCTAssertNotNil(item.thumbnail)
                             
                             print(item.title)
                             print(item.link)
                             print(item.description)
                             print(item.thumbnail)
+                            print(item.categories)
                             
                             XCTAssertTrue(true)
                             expectation.fulfill()
                         }
                     }
                 })
+            }
         }
         
         waitForExpectations(timeout: 5.0, handler: nil)
     }
+    
     
     func testRSS1() {
         let expectation = self.expectation(description: "testRSS1.0")
         
         let feedUrlString:String = "http://feeds.feedburner.com/hatena/b/hotentry"
         
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
-            .response {request, response, xmlData, error  in
+        Alamofire.request(feedUrlString).response { response in
+            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
                 
-                if (xmlData == nil) {
-                    return
-                }
-                
-                
-                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
+                TIFeedParser.parseRSS(xmlData: data as NSData, completionHandler: {(isSuccess, channel, error) -> Void in
                     
                     XCTAssertTrue(isSuccess)
                     
@@ -101,7 +95,7 @@ class SampleTests: XCTestCase {
                         print(channel!.link)
                         print(channel!.description)
                         
-                        XCTAssertTrue(channel!.items?.count > 0)
+                        XCTAssertTrue((channel!.items?.count)! > 0)
                         
                         let item:Item = channel!.items![0]
                         
@@ -121,6 +115,7 @@ class SampleTests: XCTestCase {
                         }
                     }
                 })
+            }
         }
         
         waitForExpectations(timeout: 5.0, handler: nil)
@@ -131,14 +126,10 @@ class SampleTests: XCTestCase {
         
         let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
-            .response {request, response, xmlData, error  in
+        Alamofire.request(feedUrlString).response { response in
+            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
                 
-                if (xmlData == nil) {
-                    return
-                }
-                
-                TIFeedParser.parseAtom(xmlData!, completionHandler: {(isSuccess, feed, error) -> Void in
+                TIFeedParser.parseAtom(xmlData: data as NSData, completionHandler: {(isSuccess, feed, error) -> Void in
                     
                     XCTAssertTrue(isSuccess)
                     
@@ -152,7 +143,7 @@ class SampleTests: XCTestCase {
                         print(feed!.updated)
                         
                         XCTAssertNotNil(feed!.entries)
-                        XCTAssertTrue(feed!.entries?.count > 0)
+                        XCTAssertTrue((feed!.entries?.count)! > 0)
                         
                         let entry:Entry = feed!.entries![0]
                         
@@ -172,6 +163,7 @@ class SampleTests: XCTestCase {
                         }
                     }
                 })
+            }
         }
         
         waitForExpectations(timeout: 5.0, handler: nil)
