@@ -199,7 +199,7 @@ public class TIFeedParser {
             let link:String = entryObject["link"].attributes["href"]!
             
             let updatedString = entryObject["updated"].value!
-            var updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            let updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
             var summary:String? = nil
             
