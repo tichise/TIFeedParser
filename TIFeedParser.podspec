@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TIFeedParser'
-  s.version = '1.9'
+  s.version = '1.9.1'
   s.license = {
     :type => "MIT",
     :text => <<-LICENSE
