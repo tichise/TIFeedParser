@@ -199,11 +199,7 @@ public class TIFeedParser {
             let updatedString = entryObject["updated"].value!
             let updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
-            var summary:String? = nil
-            
-            if (entryObject["summary"] != nil) {
-                summary = entryObject["summary"].value
-            }
+            let summary:String? = entryObject["summary"].value
             
             let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)
             entries.append(entry)
