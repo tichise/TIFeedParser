@@ -10,13 +10,13 @@ import AEXML
 
 public class TIFeedParser {
     
-    public static func parseRSS(xmlData:NSData, completionHandler: (Bool, Channel?, NSError?) -> Void) -> Void {
+    public static func parseRSS(xmlData:NSData, completionHandler: @escaping (Bool, Channel?, NSError?) -> Void) -> Void {
         
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
-            
+        
+        DispatchQueue.global(qos: .default).async {
+            // サブスレッド(バックグラウンド)で実行する方を書く
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
+                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
                 var existChannel = false
                 
@@ -30,39 +30,39 @@ public class TIFeedParser {
                 if (existChannel) {
                     if (xmlDoc.root.children.count == 1) {
                         // rss2.0
-                        let channel = parseRSS2(xmlDoc)
+                        let channel = parseRSS2(xmlDoc: xmlDoc)
                         
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
                         }
                     } else {
                         // rss1.0
-                        let channel = parseRSS1(xmlDoc)
+                        let channel = parseRSS1(xmlDoc: xmlDoc)
                         
-                        dispatch_async(dispatch_get_main_queue()) {
+                        DispatchQueue.main.async {
                             completionHandler(true, channel, nil)
                         }
                     }
                 } else {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(false, nil, nil)
                     }
                 }
             }
             catch let error as NSError {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     completionHandler(false, nil, error)
+                    
                 }
             }
         }
     }
     
-    public static func parseAtom(xmlData:NSData, completionHandler: (Bool, Feed?, NSError?) -> Void) -> Void {
+    public static func parseAtom(xmlData:NSData, completionHandler: @escaping (Bool, Feed?, NSError?) -> Void) -> Void {
         
-        let priority = DISPATCH_QUEUE_PRIORITY_DEFAULT
-        dispatch_async(dispatch_get_global_queue(priority, 0)) {
+        DispatchQueue.global(qos: .default).async {
             do {
-                let xmlDoc = try AEXMLDocument(xmlData: xmlData)
+                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
                 var existChannel = false
                 
@@ -73,20 +73,20 @@ public class TIFeedParser {
                 }
                 
                 if (existChannel) {
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(false, nil, nil)
                     }
                 } else {
                     // atom
-                    let feed = parseAtom(xmlDoc)
+                    let feed = parseAtom(xmlDoc: xmlDoc)
                     
-                    dispatch_async(dispatch_get_main_queue()) {
+                    DispatchQueue.main.async {
                         completionHandler(true, feed, nil)
                     }
                 }
             }
             catch let error as NSError {
-                dispatch_async(dispatch_get_main_queue()) {
+                DispatchQueue.main.async {
                     completionHandler(false, nil, error)
                 }
             }
@@ -102,7 +102,7 @@ public class TIFeedParser {
             let link:String = itemObject["link"].value!
             
             let dcDateString = itemObject["dc:date"].value!
-            let dcDate:NSDate = stringFromDate(dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            let dcDate:NSDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
             
             var description:String? = nil
             
@@ -116,7 +116,7 @@ public class TIFeedParser {
                 contentEncoded = itemObject["content:encoded"].value!
             }
             
-            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil)
+            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:nil)
             items.append(item)
         }
         
@@ -137,12 +137,24 @@ public class TIFeedParser {
             let title:String = itemObject["title"].value!
             let link:String = itemObject["link"].value!
             let pubDateString:String = itemObject["pubDate"].value!
-            let pubDate:NSDate = stringFromDate(pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
+            let pubDate:NSDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")!
             
             var description:String? = nil
             
             if itemObject["description"].value != nil {
                 description = itemObject["description"].value
+            }
+            
+            var categories:Array<String>? = []
+            
+            if itemObject["category"].all != nil {
+                var categoryClassType = String(describing: type(of: itemObject["category"].value!))
+                
+                for category in itemObject["category"].all! {
+                    if let categoryTitle = category.value {
+                        categories?.append(categoryTitle)
+                    }
+                }
             }
             
             var contentEncoded:String? = nil
@@ -164,7 +176,7 @@ public class TIFeedParser {
                 }
             }
             
-            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail)
+            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail, categories:categories)
             items.append(item)
         }
         
@@ -184,13 +196,16 @@ public class TIFeedParser {
             
             let id:String = entryObject["id"].value!
             let title:String = entryObject["title"].value!
-            let link:String = entryObject["link"]["href"].value!
+            let link:String = entryObject["link"].attributes["href"]!
             
             let updatedString = entryObject["updated"].value!
-            let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
+            var updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
-            let summary:String = entryObject["summary"].value!
+            var summary:String? = nil
             
+            if (entryObject["summary"] != nil) {
+                summary = entryObject["summary"].value
+            }
             
             let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)
             entries.append(entry)
@@ -199,19 +214,19 @@ public class TIFeedParser {
         let id:String = xmlDoc.root["id"].value!
         let title:String = xmlDoc.root["title"].value!
         let updatedString = xmlDoc.root["updated"].value!
-        let updated:NSDate = stringFromDate(updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+        let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
         
         let feed:Feed = Feed(id:id, title: title, updated:updated, entries: entries)
         
         return feed
     }
     
-    private static func stringFromDate(dateString:String, format:String) -> NSDate {
-        let dateFormatter = NSDateFormatter()
+    private static func stringFromDate(dateString:String, format:String) -> NSDate? {
+        let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
-        dateFormatter.locale = NSLocale(localeIdentifier: "en_US")
-        let date = dateFormatter.dateFromString(dateString)
+        dateFormatter.locale = NSLocale(localeIdentifier: "en_US") as Locale!
+        let date = dateFormatter.date(from: dateString)
         
-        return date!
+        return date as NSDate?
     }
 }

@@ -28,67 +28,62 @@ class ItemsController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
     
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ItemCell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
         
         let item:Item = self.items[indexPath.row]
         cell.textLabel?.text = item.title
-        cell.detailTextLabel?.text = self.pubDateStringFromDate(item.pubDate!)
+        cell.detailTextLabel?.text = self.pubDateStringFromDate(item.pubDate! as Date)
         
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let item = self.items[indexPath.row]
         
-        let url:NSURL = NSURL(string: item.link!)!
-        let safariViewController = SFSafariViewController(URL: url, entersReaderIfAvailable: true)
-        presentViewController(safariViewController, animated: true, completion: nil)
+        let url:URL = URL(string: item.link!)!
+        let safariViewController = SFSafariViewController(url: url, entersReaderIfAvailable: true)
+        present(safariViewController, animated: true, completion: nil)
     }
     
     func loadRSS() {
         
         let feedUrlString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
         
-        
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
-            .response {request, response, xmlData, error  in
-                
-                if (xmlData == nil) {
-                    return
-                }
-                
-                TIFeedParser.parseRSS(xmlData!, completionHandler: {(isSuccess, channel, error) -> Void in
+        Alamofire.request(feedUrlString).response { response in
+
+            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
+
+                TIFeedParser.parseRSS(xmlData: data as NSData, completionHandler: {(isSuccess, channel, error) -> Void in
                     
                     if (isSuccess) {
                         self.items = channel!.items!
                         self.tableView.reloadData()
                     }
                     
-                    if (error != nil) {
-                        print(error?.localizedDescription)
+                    if (response.error != nil) {
+                        print((response.error?.localizedDescription)! as String)
                     }
                 })
+            }
         }
+    
     }
     
     func loadAtom() {
         
         let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
-            .response {request, response, xmlData, error  in
+        Alamofire.request(feedUrlString).response { response in
+            
+            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
                 
-                if (xmlData == nil) {
-                    return
-                }
-                
-                TIFeedParser.parseAtom(xmlData!, completionHandler: {(isSuccess, feed, error) -> Void in
+                TIFeedParser.parseAtom(xmlData: data as NSData, completionHandler: {(isSuccess, feed, error) -> Void in
                     
                     if (isSuccess) {
                         self.entries = feed!.entries!
@@ -96,17 +91,18 @@ class ItemsController: UITableViewController {
                     }
                     
                     if (error != nil) {
-                        print(error?.localizedDescription)
+                        print((error?.localizedDescription)! as String)
                     }
                 })
+            }
         }
     }
     
-    func pubDateStringFromDate(pubDate:NSDate)->String {
-        let format = NSDateFormatter()
+    func pubDateStringFromDate(_ pubDate:Date)->String {
+        let format = DateFormatter()
         format.dateFormat = "yyyy/M/d HH:mm"
         
-        let pubDateString = format.stringFromDate(pubDate)
+        let pubDateString = format.string(from: pubDate)
         return pubDateString
     }
 }
