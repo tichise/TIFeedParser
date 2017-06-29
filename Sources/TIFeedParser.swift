@@ -218,12 +218,12 @@ public class TIFeedParser {
         return feed
     }
     
-    private static func stringFromDate(dateString:String, format:String) -> NSDate {
+    private static func stringFromDate(dateString:String, format:String) -> NSDate? {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = format
         dateFormatter.locale = NSLocale(localeIdentifier: "en_US") as Locale!
         let date = dateFormatter.date(from: dateString)
         
-        return date! as NSDate
+        return date as NSDate?
     }
 }
