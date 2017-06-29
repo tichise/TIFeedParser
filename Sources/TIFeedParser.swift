@@ -147,9 +147,7 @@ public class TIFeedParser {
             
             var categories:Array<String>? = []
             
-            if itemObject["category"].all != nil {
-                var categoryClassType = String(describing: type(of: itemObject["category"].value!))
-                
+            if itemObject["category"].all != nil {                
                 for category in itemObject["category"].all! {
                     if let categoryTitle = category.value {
                         categories?.append(categoryTitle)
