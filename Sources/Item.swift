@@ -15,8 +15,9 @@ public struct Item {
     public internal(set) var description:String?
     public internal(set) var contentEncoded:String?
     public internal(set) var thumbnail:String?
+    public internal(set) var categories:Array<String>?
     
-    init(title:String, link:String, pubDate:NSDate, description:String?, contentEncoded:String?, thumbnail:String?){
+    init(title:String, link:String, pubDate:NSDate, description:String?, contentEncoded:String?, thumbnail:String?, categories:Array<String>?){
         
         self.title = title
         self.link = link
@@ -24,5 +25,6 @@ public struct Item {
         self.description = description
         self.contentEncoded = contentEncoded
         self.thumbnail = thumbnail
+        self.categories = categories
     }
 }

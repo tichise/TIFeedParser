@@ -52,7 +52,7 @@ public class TIFeedParser {
             catch let error as NSError {
                 DispatchQueue.main.async {
                     completionHandler(false, nil, error)
-
+                    
                 }
             }
         }
@@ -116,7 +116,7 @@ public class TIFeedParser {
                 contentEncoded = itemObject["content:encoded"].value!
             }
             
-            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil)
+            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:nil)
             items.append(item)
         }
         
@@ -145,6 +145,18 @@ public class TIFeedParser {
                 description = itemObject["description"].value
             }
             
+            var categories:Array<String>? = []
+            
+            if itemObject["category"].all != nil {
+                var categoryClassType = String(describing: type(of: itemObject["category"].value!))
+                
+                for category in itemObject["category"].all! {
+                    if let categoryTitle = category.value {
+                        categories?.append(categoryTitle)
+                    }
+                }
+            }
+            
             var contentEncoded:String? = nil
             
             if itemObject["contentEncoded"].value != nil {
@@ -164,7 +176,7 @@ public class TIFeedParser {
                 }
             }
             
-            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail)
+            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail, categories:categories)
             items.append(item)
         }
         
