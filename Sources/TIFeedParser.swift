@@ -102,7 +102,7 @@ public class TIFeedParser {
             let link:String = itemObject["link"].value!
             
             let dcDateString = itemObject["dc:date"].value!
-            let dcDate:NSDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            let dcDate:NSDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
             
             var description:String? = nil
             
@@ -137,7 +137,7 @@ public class TIFeedParser {
             let title:String = itemObject["title"].value!
             let link:String = itemObject["link"].value!
             let pubDateString:String = itemObject["pubDate"].value!
-            let pubDate:NSDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
+            let pubDate:NSDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")!
             
             var description:String? = nil
             
@@ -196,13 +196,16 @@ public class TIFeedParser {
             
             let id:String = entryObject["id"].value!
             let title:String = entryObject["title"].value!
-            let link:String = entryObject["link"]["href"].value!
+            let link:String = entryObject["link"].attributes["href"]!
             
             let updatedString = entryObject["updated"].value!
-            let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:ss'Z'")
+            var updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
             
-            let summary:String = entryObject["summary"].value!
+            var summary:String? = nil
             
+            if (entryObject["summary"] != nil) {
+                summary = entryObject["summary"].value
+            }
             
             let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)
             entries.append(entry)
@@ -211,7 +214,7 @@ public class TIFeedParser {
         let id:String = xmlDoc.root["id"].value!
         let title:String = xmlDoc.root["title"].value!
         let updatedString = xmlDoc.root["updated"].value!
-        let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+        let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
         
         let feed:Feed = Feed(id:id, title: title, updated:updated, entries: entries)
         
