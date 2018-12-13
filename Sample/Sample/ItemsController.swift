@@ -63,39 +63,49 @@ class ItemsController: UITableViewController {
     
     func loadRSS() {
         
-        let feedUrlString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
-        
-        Alamofire.request(feedUrlString).response { response in
+        let feedUrlString = "https://news.google.com/_/rss/topics/CAAqKAgKIiJDQkFTRXdvSkwyMHZNR1ptZHpWbUVnSnFZUm9DU2xBb0FBUAE?hl=ja&gl=JP&ceid=JP:ja"
 
-            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
-
-
-                TIFeedParser.parseRSS(xmlData: data, onSuccess: { (channel) in
-                    self.items = channel.items
-                    self.tableView.reloadData()
-                }, onNotFound: {
-                }, onFailure: { (error) in
-                })
+        Alamofire.request(feedUrlString).responseData { (response) in
+            if 200 != response.response?.statusCode {
+                return
             }
+
+            guard let data = response.data else {
+                return
+            }
+
+            TIFeedParser.parseRSS(xmlData: data, onSuccess: { (channel) in
+                self.items = channel.items
+                self.tableView.reloadData()
+            }, onNotFound: {
+                print("onNotFound")
+            }, onFailure: { (error) in
+            })
         }
-    
     }
     
     func loadAtom() {
         
-        let feedUrlString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
+        let feedUrlString = "https://news.google.com/_/atom/topics/CAAqKAgKIiJDQkFTRXdvSkwyMHZNR1ptZHpWbUVnSnFZUm9DU2xBb0FBUAE?hl=ja&gl=JP&ceid=JP:ja"
         
-        Alamofire.request(feedUrlString).response { response in
-            
-            if let data = response.data, let _ = String(data: data, encoding: .utf8) {
 
-                TIFeedParser.parseAtom(xmlData: data, onSuccess: { (feed) in
-                    self.entries = feed.entries
-                    self.tableView.reloadData()
-                }, onNotFound: {
-                }, onFailure: { (error) in
-                })
+        Alamofire.request(feedUrlString).responseData { (response) in
+            if 200 != response.response?.statusCode {
+                return
             }
+
+            guard let data = response.data else {
+                return
+            }
+
+            TIFeedParser.parseRSS(xmlData: data, onSuccess: { (channel) in
+                self.items = channel.items
+                self.tableView.reloadData()
+            }, onNotFound: {
+                print("onNotFound")
+            }, onFailure: { (error) in
+            })
+
         }
     }
     
