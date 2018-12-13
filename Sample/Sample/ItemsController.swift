@@ -39,7 +39,7 @@ class ItemsController: UITableViewController {
         cell.textLabel?.text = item.title
 
         if let pubDate = item.pubDate {
-            cell.detailTextLabel?.text = self.pubDateStringFromDate(pubDate)
+            cell.detailTextLabel?.text = self.getPubDateString(pubDate: pubDate)
         }
 
         return cell
@@ -92,7 +92,7 @@ class ItemsController: UITableViewController {
         }
     }
     
-    func pubDateStringFromDate(_ pubDate:Date)->String {
+    func getPubDateString(pubDate: Date) ->String {
         let format = DateFormatter()
         format.dateFormat = "yyyy/M/d HH:mm"
         
