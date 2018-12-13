@@ -37,8 +37,11 @@ class ItemsController: UITableViewController {
         
         let item:Item = self.items[indexPath.row]
         cell.textLabel?.text = item.title
-        cell.detailTextLabel?.text = self.pubDateStringFromDate(item.pubDate! as Date)
-        
+
+        if let pubDate = item.pubDate {
+            cell.detailTextLabel?.text = self.pubDateStringFromDate(pubDate)
+        }
+
         return cell
     }
     
@@ -59,16 +62,12 @@ class ItemsController: UITableViewController {
 
             if let data = response.data, let _ = String(data: data, encoding: .utf8) {
 
-                TIFeedParser.parseRSS(xmlData: data as NSData, completionHandler: {(isSuccess, channel, error) -> Void in
-                    
-                    if (isSuccess) {
-                        self.items = channel!.items!
-                        self.tableView.reloadData()
-                    }
-                    
-                    if (response.error != nil) {
-                        print((response.error?.localizedDescription)! as String)
-                    }
+
+                TIFeedParser.parseRSS(xmlData: data, onSuccess: { (channel) in
+                    self.items = channel.items
+                    self.tableView.reloadData()
+                }, onNotFound: {
+                }, onFailure: { (error) in
                 })
             }
         }
@@ -82,17 +81,12 @@ class ItemsController: UITableViewController {
         Alamofire.request(feedUrlString).response { response in
             
             if let data = response.data, let _ = String(data: data, encoding: .utf8) {
-                
-                TIFeedParser.parseAtom(xmlData: data as NSData, completionHandler: {(isSuccess, feed, error) -> Void in
-                    
-                    if (isSuccess) {
-                        self.entries = feed!.entries!
-                        self.tableView.reloadData()
-                    }
-                    
-                    if (error != nil) {
-                        print((error?.localizedDescription)! as String)
-                    }
+
+                TIFeedParser.parseAtom(xmlData: data, onSuccess: { (feed) in
+                    self.entries = feed.entries
+                    self.tableView.reloadData()
+                }, onNotFound: {
+                }, onFailure: { (error) in
                 })
             }
         }

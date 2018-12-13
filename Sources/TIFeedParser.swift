@@ -10,7 +10,7 @@ import AEXML
 
 public class TIFeedParser {
     
-    public static func parseRSS(xmlData:NSData, completionHandler: @escaping (Bool, Channel?, NSError?) -> Void) -> Void {
+    public static func parseRSS(xmlData:Data, onSuccess: @escaping (Channel) -> (), onNotFound: @escaping () -> (), onFailure: @escaping (Error?) -> ()) {
         
         
         DispatchQueue.global(qos: .default).async {
@@ -33,32 +33,31 @@ public class TIFeedParser {
                         let channel = parseRSS2(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
-                            completionHandler(true, channel, nil)
+                            onSuccess(channel)
                         }
                     } else {
                         // rss1.0
                         let channel = parseRSS1(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
-                            completionHandler(true, channel, nil)
+                            onSuccess(channel)
                         }
                     }
                 } else {
                     DispatchQueue.main.async {
-                        completionHandler(false, nil, nil)
+                        onNotFound()
                     }
                 }
             }
-            catch let error as NSError {
+            catch let error {
                 DispatchQueue.main.async {
-                    completionHandler(false, nil, error)
-                    
+                    onFailure(error)
                 }
             }
         }
     }
     
-    public static func parseAtom(xmlData:NSData, completionHandler: @escaping (Bool, Feed?, NSError?) -> Void) -> Void {
+    public static func parseAtom(xmlData: Data, onSuccess: @escaping (Feed) -> (), onNotFound: @escaping () -> (), onFailure: @escaping (Error?) -> ()) {
         
         DispatchQueue.global(qos: .default).async {
             do {
@@ -74,20 +73,20 @@ public class TIFeedParser {
                 
                 if (existChannel) {
                     DispatchQueue.main.async {
-                        completionHandler(false, nil, nil)
+                        onNotFound()
                     }
                 } else {
                     // atom
                     let feed = parseAtom(xmlDoc: xmlDoc)
                     
                     DispatchQueue.main.async {
-                        completionHandler(true, feed, nil)
+                        onSuccess(feed)
                     }
                 }
             }
-            catch let error as NSError {
+            catch let error {
                 DispatchQueue.main.async {
-                    completionHandler(false, nil, error)
+                    onFailure(error)
                 }
             }
         }
