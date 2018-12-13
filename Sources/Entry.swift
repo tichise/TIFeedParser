@@ -15,7 +15,7 @@ public struct Entry {
     public internal(set) var updated:Date?
     public internal(set) var summary:String?
     
-    init(id:String, title:String, link:String, updated:NSDate?, summary:String?){
+    init(id: String?, title: String?, link: String?, updated: Date?, summary: String?){
 
         self.id = id
         self.title = title
