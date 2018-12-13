@@ -16,7 +16,7 @@ public struct Feed {
     
     init() {}
     
-    init(id:String, title:String, updated:NSDate, entries:Array<Entry>){
+    init(id: String?, title: String?, updated: Date?, entries: Array<Entry>){
 
         self.id = id
         self.title = title
