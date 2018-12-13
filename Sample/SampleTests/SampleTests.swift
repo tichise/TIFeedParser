@@ -41,9 +41,9 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(channel.items)
                     XCTAssertTrue(channel.items.count > 0)
 
-                    print(channel.title!)
-                    print(channel.link!)
-                    print(channel.description!)
+                    if let title = channel.title {print(title)}
+                    if let link = channel.link {print(link)}
+                    if let description = channel.description {print(description)}
 
                     let item = channel.items[0]
 
@@ -54,10 +54,11 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(item.categories)
                     // XCTAssertNotNil(item.thumbnail)
 
-                    print(item.title!)
-                    print(item.link!)
-                    print(item.description!)
-                    // print(item.thumbnail!)
+                    if let title = item.title {print(title)}
+                    if let link = channel.link {print(link)}
+                    if let description = item.description {print(description)}
+                    if let thumbnail = item.thumbnail {print(thumbnail)}
+
                     print(item.categories)
 
                     XCTAssertTrue(true)
@@ -87,9 +88,9 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(channel.description)
                     XCTAssertNotNil(channel.items)
 
-                    print(channel.title!)
-                    print(channel.link!)
-                    print(channel.description!)
+                    if let title = channel.title {print(title)}
+                    if let link = channel.link {print(link)}
+                    if let description = channel.description {print(description)}
 
                     XCTAssertTrue(channel.items.count > 0)
 
@@ -100,10 +101,10 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(item.description)
                     XCTAssertNotNil(item.contentEncoded)
 
-                    print(item.title!)
-                    print(item.link!)
-                    print(item.description!)
-                    // print(item.thumbnail)
+                    if let title = item.title {print(title)}
+                    if let link = channel.link {print(link)}
+                    if let description = item.description {print(description)}
+                    if let thumbnail = item.thumbnail {print(thumbnail)}
 
                     XCTAssertTrue(true)
                     expectation.fulfill()
@@ -130,9 +131,9 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(feed.title)
                     XCTAssertNotNil(feed.updated)
 
-                    print(feed.id!)
-                    print(feed.title!)
-                    print(feed.updated!)
+                    if let id = feed.id {print(id)}
+                    if let title = feed.title {print(title)}
+                    if let updated = feed.updated {print(updated)}
 
                     XCTAssertNotNil(feed.entries)
                     XCTAssertTrue(feed.entries.count > 0)
@@ -144,10 +145,10 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(entry.updated)
                     XCTAssertNotNil(entry.summary)
 
-                    print(entry.id!)
-                    print(entry.title!)
-                    print(entry.updated!)
-                    print(entry.summary!)
+                    if let id = entry.id {print(id)}
+                    if let title = entry.title {print(title)}
+                    if let updated = entry.updated {print(updated)}
+                    if let summary = entry.summary {print(summary)}
 
                     XCTAssertTrue(true)
                     expectation.fulfill()
@@ -175,9 +176,9 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(feed.title)
                     XCTAssertNotNil(feed.updated)
 
-                    print(feed.id!)
-                    print(feed.title!)
-                    print(feed.updated!)
+                    if let id = feed.id {print(id)}
+                    if let title = feed.title {print(title)}
+                    if let updated = feed.updated {print(updated)}
 
                     XCTAssertNotNil(feed.entries)
                     XCTAssertTrue(feed.entries.count > 0)
@@ -188,12 +189,13 @@ class SampleTests: XCTestCase {
                     XCTAssertNotNil(entry.title)
                     XCTAssertNotNil(entry.updated)
 
-                    print(entry.id!)
-                    print(entry.title!)
-                    print(entry.updated!)
+                    if let id = entry.id {print(id)}
+                    if let title = entry.title {print(title)}
+                    if let updated = entry.updated {print(updated)}
 
                     XCTAssertTrue(true)
                     expectation.fulfill()
+
                 }, onNotFound: {
                 }, onFailure: { (error) in
                 })
