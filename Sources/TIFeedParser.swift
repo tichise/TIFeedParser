@@ -17,8 +17,8 @@ public class TIFeedParser {
         DispatchQueue.global(qos: .default).async {
             // サブスレッド(バックグラウンド)で実行する方を書く
             do {
-                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
+                let xmlDoc = try AEXMLDocument(xml: xmlData)
                 var existChannel = false
                 
                 for child in xmlDoc.root.children {
@@ -62,8 +62,8 @@ public class TIFeedParser {
         
         DispatchQueue.global(qos: .default).async {
             do {
-                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
+                let xmlDoc = try AEXMLDocument(xml: xmlData)
                 var existChannel = false
                 
                 for child in xmlDoc.root.children {
