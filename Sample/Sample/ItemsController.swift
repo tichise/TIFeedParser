@@ -35,7 +35,7 @@ class ItemsController: UITableViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ItemCell", for: indexPath)
         
-        let item:Item = self.items[indexPath.row]
+        let item = self.items[indexPath.row]
         cell.textLabel?.text = item.title
 
         if let pubDate = item.pubDate {
