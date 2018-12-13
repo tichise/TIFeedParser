@@ -9,15 +9,15 @@ import Foundation
 
 public struct Item {
     
-    public internal(set) var title:String?
-    public internal(set) var link:String?
-    public internal(set) var pubDate:NSDate?
-    public internal(set) var description:String?
-    public internal(set) var contentEncoded:String?
-    public internal(set) var thumbnail:String?
-    public internal(set) var categories:Array<String>?
+    public internal(set) var title: String?
+    public internal(set) var link: String?
+    public internal(set) var pubDate: Date?
+    public internal(set) var description: String?
+    public internal(set) var contentEncoded: String?
+    public internal(set) var thumbnail: String?
+    public internal(set) var categories: Array<String> = []
     
-    init(title:String, link:String, pubDate:NSDate, description:String?, contentEncoded:String?, thumbnail:String?, categories:Array<String>?){
+    init(title: String?, link: String?, pubDate: Date?, description: String?, contentEncoded: String?, thumbnail: String?, categories: Array<String>){
         
         self.title = title
         self.link = link

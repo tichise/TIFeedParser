@@ -7,17 +7,18 @@
 
 import Foundation
 import AEXML
+import SwiftDate
 
 public class TIFeedParser {
     
-    public static func parseRSS(xmlData:NSData, completionHandler: @escaping (Bool, Channel?, NSError?) -> Void) -> Void {
+    public static func parseRSS(xmlData:Data, onSuccess: @escaping (Channel) -> (), onNotFound: @escaping () -> (), onFailure: @escaping (Error?) -> ()) {
         
         
         DispatchQueue.global(qos: .default).async {
             // サブスレッド(バックグラウンド)で実行する方を書く
             do {
-                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
+                let xmlDoc = try AEXMLDocument(xml: xmlData)
                 var existChannel = false
                 
                 for child in xmlDoc.root.children {
@@ -33,37 +34,36 @@ public class TIFeedParser {
                         let channel = parseRSS2(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
-                            completionHandler(true, channel, nil)
+                            onSuccess(channel)
                         }
                     } else {
                         // rss1.0
                         let channel = parseRSS1(xmlDoc: xmlDoc)
                         
                         DispatchQueue.main.async {
-                            completionHandler(true, channel, nil)
+                            onSuccess(channel)
                         }
                     }
                 } else {
                     DispatchQueue.main.async {
-                        completionHandler(false, nil, nil)
+                        onNotFound()
                     }
                 }
             }
-            catch let error as NSError {
+            catch let error {
                 DispatchQueue.main.async {
-                    completionHandler(false, nil, error)
-                    
+                    onFailure(error)
                 }
             }
         }
     }
     
-    public static func parseAtom(xmlData:NSData, completionHandler: @escaping (Bool, Feed?, NSError?) -> Void) -> Void {
+    public static func parseAtom(xmlData: Data, onSuccess: @escaping (Feed) -> (), onNotFound: @escaping () -> (), onFailure: @escaping (Error?) -> ()) {
         
         DispatchQueue.global(qos: .default).async {
             do {
-                let xmlDoc = try AEXMLDocument(xml: xmlData as Data)
                 
+                let xmlDoc = try AEXMLDocument(xml: xmlData)
                 var existChannel = false
                 
                 for child in xmlDoc.root.children {
@@ -74,153 +74,153 @@ public class TIFeedParser {
                 
                 if (existChannel) {
                     DispatchQueue.main.async {
-                        completionHandler(false, nil, nil)
+                        onNotFound()
                     }
                 } else {
                     // atom
                     let feed = parseAtom(xmlDoc: xmlDoc)
                     
                     DispatchQueue.main.async {
-                        completionHandler(true, feed, nil)
+                        onSuccess(feed)
                     }
                 }
             }
-            catch let error as NSError {
+            catch let error {
                 DispatchQueue.main.async {
-                    completionHandler(false, nil, error)
+                    onFailure(error)
                 }
             }
         }
     }
     
-    private static func parseRSS1(xmlDoc:AEXMLDocument) -> Channel {
-        var items:Array<Item> = Array()
-        
-        for itemObject in xmlDoc.root["item"].all! {
-            
-            let title:String = itemObject["title"].value!
-            let link:String = itemObject["link"].value!
-            
-            let dcDateString = itemObject["dc:date"].value!
-            let dcDate:NSDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
-            
-            var description:String? = nil
-            
-            if itemObject["description"].value != nil {
-                description = itemObject["description"].value
+    private static func parseRSS1(xmlDoc: AEXMLDocument) -> Channel {
+        var items:Array<Item> = []
+
+        if let all = xmlDoc.root["item"].all {
+            for itemObject in all {
+
+                let title = itemObject["title"].value
+                let link = itemObject["link"].value
+
+                var dcDate: Date? = nil
+
+                if let dcDateString = itemObject["dc:date"].value {
+                    dcDate = dcDateString.toDate()?.date
+                }
+
+                let description = itemObject["description"].value
+                let contentEncoded = itemObject["content:encoded"].value
+
+                let item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:[])
+                items.append(item)
             }
-            
-            var contentEncoded:String? = nil
-            
-            if itemObject["content:encoded"].value != nil {
-                contentEncoded = itemObject["content:encoded"].value!
-            }
-            
-            let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:nil)
-            items.append(item)
         }
         
-        let title:String = xmlDoc.root["channel"]["title"].value!
-        let link:String = xmlDoc.root["channel"]["link"].value!
-        let description:String = xmlDoc.root["channel"]["description"].value!
+        let title = xmlDoc.root["channel"]["title"].value
+        let link = xmlDoc.root["channel"]["link"].value
+        let description = xmlDoc.root["channel"]["description"].value
         
-        let channel:Channel = Channel(title: title, link: link, description: description, items: items)
+        let channel = Channel(title: title, link: link, description: description, items: items)
         
         return channel
     }
     
     private static func parseRSS2(xmlDoc:AEXMLDocument) -> Channel {
         var items:Array<Item> = Array()
-        
-        for itemObject in xmlDoc.root["channel"]["item"].all! {
-            
-            let title:String = itemObject["title"].value!
-            let link:String = itemObject["link"].value!
-            let pubDateString:String = itemObject["pubDate"].value!
-            let pubDate:NSDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")!
-            
-            var description:String? = nil
-            
-            if itemObject["description"].value != nil {
-                description = itemObject["description"].value
-            }
-            
-            var categories:Array<String>? = []
-            
-            if itemObject["category"].all != nil {                
-                for category in itemObject["category"].all! {
-                    if let categoryTitle = category.value {
-                        categories?.append(categoryTitle)
+
+        if let all = xmlDoc.root["channel"]["item"].all {
+            for itemObject in all {
+
+                let title = itemObject["title"].value
+                let link = itemObject["link"].value
+
+                var pubDate: Date? = nil
+
+                if let pubDateString = itemObject["pubDate"].value {
+                    pubDate = pubDateString.toDate()?.date
+                }
+
+                let description = itemObject["description"].value
+
+                var categories:Array<String> = []
+
+                if let all = itemObject["category"].all {
+                    for category in all {
+                        if let categoryTitle = category.value {
+                            categories.append(categoryTitle)
+                        }
                     }
                 }
-            }
-            
-            var contentEncoded:String? = nil
-            
-            if itemObject["contentEncoded"].value != nil {
-                contentEncoded = itemObject["content:encoded"].value!
-            }
-            
-            var thumbnail:String? = nil
-            
-            if itemObject["media:thumbnail"].value != nil {
-                
-                if (itemObject["media:thumbnail"].value! != "element <media:thumbnail> not found") {
-                    let mediaThumbnails:Array = itemObject["media:thumbnail"].all!
-                    
-                    if (mediaThumbnails.count > 0) {
-                        thumbnail = mediaThumbnails[1].attributes["url"]! as String
+
+                var contentEncoded:String?
+
+                if itemObject["contentEncoded"].value != nil {
+                    contentEncoded = itemObject["content:encoded"].value
+                }
+
+                var thumbnail:String?
+
+                if itemObject["media:thumbnail"].value != nil {
+
+                    if (itemObject["media:thumbnail"].value != "element <media:thumbnail> not found") {
+                        let mediaThumbnails:Array = itemObject["media:thumbnail"].all!
+
+                        if (mediaThumbnails.count > 0) {
+                            thumbnail = mediaThumbnails[1].attributes["url"]
+                        }
                     }
                 }
+
+                let item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail, categories:categories)
+
+                items.append(item)
             }
-            
-            let item:Item = Item(title: title, link: link, pubDate: pubDate, description: description, contentEncoded: contentEncoded, thumbnail:thumbnail, categories:categories)
-            items.append(item)
         }
         
-        let title:String = xmlDoc.root["channel"]["title"].value!
-        let link:String = xmlDoc.root["channel"]["link"].value!
-        let description:String = xmlDoc.root["channel"]["description"].value!
+        let title = xmlDoc.root["channel"]["title"].value
+        let link = xmlDoc.root["channel"]["link"].value
+        let description = xmlDoc.root["channel"]["description"].value
         
-        let channel:Channel = Channel(title: title, link: link, description: description, items: items)
+        let channel = Channel(title: title, link: link, description: description, items: items)
         
         return channel
     }
     
     private static func parseAtom(xmlDoc:AEXMLDocument) -> Feed {
         var entries:Array<Entry> = Array()
-        
-        for entryObject in xmlDoc.root["entry"].all! {
-            
-            let id:String = entryObject["id"].value!
-            let title:String = entryObject["title"].value!
-            let link:String = entryObject["link"].attributes["href"]!
-            
-            let updatedString = entryObject["updated"].value!
-            let updated:NSDate? = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
-            
-            let summary:String? = entryObject["summary"].value
-            
-            let entry:Entry = Entry(id:id, title: title, link: link, updated:updated, summary: summary)
-            entries.append(entry)
+
+        if let all = xmlDoc.root["entry"].all {
+            for entryObject in all {
+
+                let id = entryObject["id"].value
+                let title = entryObject["title"].value
+                let link = entryObject["link"].attributes["href"]
+
+                var updated: Date? = nil
+
+                if let updatedString = entryObject["updated"].value {
+                    updated = updatedString.toDate()?.date
+                }
+
+                let summary = entryObject["summary"].value
+
+                let entry = Entry(id: id, title: title, link: link, updated: updated, summary: summary)
+                entries.append(entry)
+            }
         }
         
-        let id:String = xmlDoc.root["id"].value!
-        let title:String = xmlDoc.root["title"].value!
-        let updatedString = xmlDoc.root["updated"].value!
-        let updated:NSDate = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")!
-        
-        let feed:Feed = Feed(id:id, title: title, updated:updated, entries: entries)
+        let id = xmlDoc.root["id"].value
+        let title = xmlDoc.root["title"].value
+
+
+        var updated: Date? = nil
+
+        if let updatedString = xmlDoc.root["updated"].value {
+            updated = updatedString.toDate()?.date
+        }
+
+        let feed = Feed(id: id, title: title, updated: updated, entries: entries)
         
         return feed
-    }
-    
-    private static func stringFromDate(dateString:String, format:String) -> NSDate? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        dateFormatter.locale = Locale(identifier: "en_US")
-        let date = dateFormatter.date(from: dateString)
-        
-        return date as NSDate?
     }
 }
