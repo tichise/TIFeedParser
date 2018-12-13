@@ -111,7 +111,7 @@ public class TIFeedParser {
                 let description = itemObject["description"].value
                 let contentEncoded = itemObject["content:encoded"].value
 
-                let item:Item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:[])
+                let item = Item(title: title, link: link, pubDate: dcDate, description: description, contentEncoded:contentEncoded, thumbnail:nil, categories:[])
                 items.append(item)
             }
         }
