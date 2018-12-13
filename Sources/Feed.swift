@@ -9,10 +9,10 @@ import Foundation
 
 public struct Feed {
 
-    public internal(set) var id:String?
-    public internal(set) var title:String?
-    public internal(set) var updated:NSDate?
-    public internal(set) var entries:Array<Entry>?
+    public internal(set) var id: String?
+    public internal(set) var title: String?
+    public internal(set) var updated: Date?
+    public internal(set) var entries: Array<Entry> = []
     
     init() {}
     
