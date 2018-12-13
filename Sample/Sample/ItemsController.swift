@@ -48,8 +48,15 @@ class ItemsController: UITableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let item = self.items[indexPath.row]
-        
-        let url:URL = URL(string: item.link!)!
+
+        guard let link =  item.link else {
+            return
+        }
+
+        guard let url = URL(string: link) else {
+            return
+        }
+
         let safariViewController = SFSafariViewController(url: url, entersReaderIfAvailable: true)
         present(safariViewController, animated: true, completion: nil)
     }
