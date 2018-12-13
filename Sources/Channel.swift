@@ -16,7 +16,7 @@ public struct Channel {
     
     init() {}
     
-    init(title:String, link:String, description:String, items:Array<Item>){
+    init(title: String?, link: String?, description: String?, items: Array<Item>){
         
         self.title = title
         self.link = link
