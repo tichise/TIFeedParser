@@ -7,6 +7,7 @@
 
 import Foundation
 import AEXML
+import SwiftDate
 
 public class TIFeedParser {
     
@@ -104,7 +105,7 @@ public class TIFeedParser {
                 var dcDate: Date? = nil
 
                 if let dcDateString = itemObject["dc:date"].value {
-                    dcDate = stringFromDate(dateString: dcDateString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+                    dcDate = dcDateString.toDate()?.date
                 }
 
                 let description = itemObject["description"].value
@@ -136,7 +137,7 @@ public class TIFeedParser {
                 var pubDate: Date? = nil
 
                 if let pubDateString = itemObject["pubDate"].value {
-                    pubDate = stringFromDate(dateString: pubDateString, format: "EEE, d MMM yyyy HH:mm:ss Z")
+                    pubDate = pubDateString.toDate()?.date
                 }
 
                 let description = itemObject["description"].value
@@ -198,7 +199,7 @@ public class TIFeedParser {
                 var updated: Date? = nil
 
                 if let updatedString = entryObject["updated"].value {
-                    updated = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+                    updated = updatedString.toDate()?.date
                 }
 
                 let summary = entryObject["summary"].value
@@ -215,20 +216,11 @@ public class TIFeedParser {
         var updated: Date? = nil
 
         if let updatedString = xmlDoc.root["updated"].value {
-            updated = stringFromDate(dateString: updatedString, format: "yyyy-MM-dd'T'HH:mm:sszzz")
+            updated = updatedString.toDate()?.date
         }
 
         let feed = Feed(id: id, title: title, updated: updated, entries: entries)
         
         return feed
-    }
-    
-    private static func stringFromDate(dateString:String, format:String) -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = format
-        dateFormatter.locale = Locale(identifier: "en_US")
-        let date = dateFormatter.date(from: dateString)
-        
-        return date
     }
 }
