@@ -137,7 +137,7 @@ public class TIFeedParser {
                 var pubDate: Date? = nil
 
                 if let pubDateString = itemObject["pubDate"].value {
-                    pubDate = pubDateString.toDate()?.date
+                    pubDate = pubDateString.toDate(style: StringToDateStyles.rss)?.date
                 }
 
                 let description = itemObject["description"].value
