@@ -137,7 +137,7 @@ public class TIFeedParser {
                 var pubDate: Date? = nil
 
                 if let pubDateString = itemObject["pubDate"].value {
-                    pubDate = pubDateString.toDate()?.date
+                    pubDate = pubDateString.toDate(style: StringToDateStyles.rss)?.date
                 }
 
                 let description = itemObject["description"].value
@@ -152,21 +152,18 @@ public class TIFeedParser {
                     }
                 }
 
-                var contentEncoded:String?
-
-                if itemObject["contentEncoded"].value != nil {
-                    contentEncoded = itemObject["content:encoded"].value
-                }
+                let contentEncoded = itemObject["content:encoded"].value
 
                 var thumbnail:String?
 
-                if itemObject["media:thumbnail"].value != nil {
+                if let mediaThumbnail = itemObject["media:thumbnail"].value {
 
-                    if (itemObject["media:thumbnail"].value != "element <media:thumbnail> not found") {
-                        let mediaThumbnails:Array = itemObject["media:thumbnail"].all!
+                    if (mediaThumbnail != "element <media:thumbnail> not found") {
 
-                        if (mediaThumbnails.count > 0) {
-                            thumbnail = mediaThumbnails[1].attributes["url"]
+                        if let mediaThumbnails = itemObject["media:thumbnail"].all {
+                            if (mediaThumbnails.count > 0) {
+                                thumbnail = mediaThumbnails[1].attributes["url"]
+                            }
                         }
                     }
                 }
