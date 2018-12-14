@@ -53,6 +53,7 @@ class SampleTests: XCTestCase {
                     // XCTAssertNotNil(item.contentEncoded)
                     XCTAssertNotNil(item.categories)
                     // XCTAssertNotNil(item.thumbnail)
+                    XCTAssertNotNil(item.pubDate)
 
                     if let title = item.title {print(title)}
                     if let link = channel.link {print(link)}
