@@ -7,8 +7,8 @@
 
 import Foundation
 
-public struct Item {
-    
+public struct Item: Identifiable {
+    public let id = UUID()
     public internal(set) var title: String?
     public internal(set) var link: String?
     public internal(set) var pubDate: Date?
