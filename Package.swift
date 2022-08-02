@@ -9,9 +9,13 @@ let package = Package(
     products: [
         .library(name: "TIFeedParser", targets: ["TIFeedParser"])
     ],
-    dependencies: [],
+    dependencies: [
+        .package(url: "https://github.com/tadija/AEXML.git", from: "4.6.1")
+        .package(url: "https://github.com/malcommac/SwiftDate", from: "6.3.1"),
+    ],
     targets: [
-        .target(name: "TIFeedParser", path: "Sources"),
+        .target(name: "TIFeedParser", dependencies: ["AEXML", "SwiftDate"], path: "Sources"),
+        
     ],
     swiftLanguageVersions: [.v5]
 )
