@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [],
     targets: [
-        .target(name: "TIFeedParser")
+        .target(name: "TIFeedParser", path: "Sources"),
     ],
     swiftLanguageVersions: [.v5]
 )
