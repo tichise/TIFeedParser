@@ -17,7 +17,7 @@ public struct Item: Identifiable {
     public internal(set) var thumbnail: String?
     public internal(set) var categories: Array<String> = []
     
-    init(title: String?, link: String?, pubDate: Date?, description: String?, contentEncoded: String?, thumbnail: String?, categories: Array<String>){
+    public init(title: String?, link: String?, pubDate: Date?, description: String?, contentEncoded: String?, thumbnail: String?, categories: Array<String>){
         
         self.title = title
         self.link = link
