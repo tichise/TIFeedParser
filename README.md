@@ -1,8 +1,8 @@
 #### TIFeedParser ![CocoaPods Version](https://img.shields.io/cocoapods/v/TIFeedParser.svg?style=flat) ![Platform](https://img.shields.io/cocoapods/p/TIFeedParser.svg?style=flat) ![License](https://img.shields.io/cocoapods/l/TIFeedParser.svg?style=flat)
 
-TIFeedParser is an parser for RSS, built on Alamofire and AEXML.
+TIFeedParser is a parser for RSS, built on Alamofire and AEXML.
 
-TIFeedParserはSwiftで書かれた非常にシンプルなRSSパーサーです。Atom、RSS1.0、RSS2.0に対応しています。cocoapodsからダウンロードして使えます。詳細な使い方は[こちら](http://qiita.com/tichise/items/b9f55ce924159f4ad0cd)に記載してます。
+TIFeedParser is a very simple RSS parser written in Swift, supporting Atom, RSS1.0 and RSS2.0. You can download it from cocoapods and use [it](http://qiita.com/tichise/items/b9f55ce924159f4ad0cd).
 
 
 #### Examples
