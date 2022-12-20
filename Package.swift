@@ -11,7 +11,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/tadija/AEXML.git", from: "4.6.1"),
-        .package(url: "https://github.com/malcommac/SwiftDate", from: "6.3.1"),
+        .package(url: "https://github.com/malcommac/SwiftDate", from: "7.0.0"),
     ],
     targets: [
         .target(name: "TIFeedParser", dependencies: ["AEXML", "SwiftDate"], path: "Sources"),
