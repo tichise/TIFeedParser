@@ -57,7 +57,7 @@ class ItemsController: UITableViewController {
             return
         }
 
-        let safariViewController = SFSafariViewController(url: url, entersReaderIfAvailable: true)
+        let safariViewController = SFSafariViewController(url: url)
         present(safariViewController, animated: true, completion: nil)
     }
     
