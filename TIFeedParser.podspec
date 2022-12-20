@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TIFeedParser'
-  s.version = '2.2.8'
+  s.version = '2.3.0'
   s.license = {
     :type => "MIT",
     :text => <<-LICENSE
@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.author = "Takuya Ichise"
   s.source = { :git => 'https://github.com/tichise/TIFeedParser.git', :tag => s.version }
 
-  s.ios.deployment_target = '8.0'
+  s.ios.deployment_target = '14.0'
 
   s.source_files = 'Sources/*.swift'
   s.requires_arc = true
