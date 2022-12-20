@@ -13,7 +13,7 @@ TIFeedParserはSwiftで書かれた非常にシンプルなRSSパーサーです
         
         let feedString:String = "https://news.google.com/news?hl=us&ned=us&ie=UTF-8&oe=UTF-8&output=rss"
 
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
+        AF.request(.GET, feedUrlString, parameters:nil)
             .response {request, response, xmlData, error  in
                 
                 if (xmlData == nil) {
@@ -41,7 +41,7 @@ TIFeedParserはSwiftで書かれた非常にシンプルなRSSパーサーです
         
         let feedString:String = "https://news.google.com/news?ned=us&ie=UTF-8&oe=UTF-8&q=nasa&output=atom&num=3&hl=ja"
         
-        Alamofire.request(.GET, feedUrlString, parameters:nil)
+        AF.request(.GET, feedUrlString, parameters:nil)
             .response {request, response, xmlData, error  in
                 
                 if (xmlData == nil) {
