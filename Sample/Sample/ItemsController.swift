@@ -65,7 +65,7 @@ class ItemsController: UITableViewController {
         
         let feedUrlString = "https://news.google.com/_/rss/topics/CAAqKAgKIiJDQkFTRXdvSkwyMHZNR1ptZHpWbUVnSnFZUm9DU2xBb0FBUAE?hl=ja&gl=JP&ceid=JP:ja"
 
-        Alamofire.request(feedUrlString).responseData { (response) in
+        AF.request(feedUrlString).responseData { (response) in
             if 200 != response.response?.statusCode {
                 return
             }
@@ -89,7 +89,7 @@ class ItemsController: UITableViewController {
         let feedUrlString = "https://news.google.com/_/atom/topics/CAAqKAgKIiJDQkFTRXdvSkwyMHZNR1ptZHpWbUVnSnFZUm9DU2xBb0FBUAE?hl=ja&gl=JP&ceid=JP:ja"
         
 
-        Alamofire.request(feedUrlString).responseData { (response) in
+        AF.request(feedUrlString).responseData { (response) in
             if 200 != response.response?.statusCode {
                 return
             }
