@@ -1,8 +1,8 @@
-#### TIFeedParser ![CocoaPods Version](https://img.shields.io/cocoapods/v/TIFeedParser.svg?style=flat) ![Platform](https://img.shields.io/cocoapods/p/TIFeedParser.svg?style=flat) ![License](https://img.shields.io/cocoapods/l/TIFeedParser.svg?style=flat)
+#### TIFeedParser ![Swift Package Manager](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg?style=flat) ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20watchOS-lightgrey.svg?style=flat) ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat)
 
 TIFeedParser is a parser for RSS, built on Alamofire and AEXML.
 
-TIFeedParser is a very simple RSS parser written in Swift, supporting Atom, RSS1.0 and RSS2.0. You can download it from cocoapods and use [it](http://qiita.com/tichise/items/b9f55ce924159f4ad0cd).
+TIFeedParser is a very simple RSS parser written in Swift, supporting Atom, RSS1.0 and RSS2.0. You can add it with Swift Package Manager and use [it](http://qiita.com/tichise/items/b9f55ce924159f4ad0cd).
 
 
 #### Examples
@@ -63,5 +63,21 @@ TIFeedParser is a very simple RSS parser written in Swift, supporting Atom, RSS1
     }
 ```
 
-#### Installation (CocoaPods)
-`pod TIFeedParser`
+#### Requirements
+
+- iOS 17.0+ / watchOS 10.0+
+- Xcode 15+ (Swift 5.9)
+
+Version 3.0.0 requires iOS 17 / watchOS 10 because AEXML 4.7.2+ does. For older OS versions, use TIFeedParser 2.3.x and pin AEXML to 4.7.0 in your app (SwiftPM: `exact: "4.7.0"`, CocoaPods: `pod 'AEXML', '4.7.0'`). Note that this setup does not include the AEXML 4.7.3 security fix.
+
+#### Installation (Swift Package Manager)
+```swift
+dependencies: [
+    .package(url: "https://github.com/tichise/TIFeedParser.git", from: "3.0.0")
+]
+```
+
+In Xcode, choose File > Add Package Dependencies... and enter `https://github.com/tichise/TIFeedParser.git`.
+
+#### CocoaPods
+CocoaPods is no longer supported as of 3.0.0. The last version available on CocoaPods is 2.3.1.
