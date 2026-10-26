@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = 'TIFeedParser'
-  s.version = '2.4.0'
+  s.version = '3.0.0'
   s.swift_versions = '5.0'
   s.license = {
     :type => "MIT",
@@ -22,6 +22,6 @@ Pod::Spec.new do |s|
   s.source_files = 'Sources/*.swift'
   s.requires_arc = true
 
-  s.dependency 'AEXML', '~> 4.7.3'
+  s.dependency 'AEXML', '~> 4.7', '>= 4.7.3'
   s.dependency 'SwiftDate'
 end

@@ -63,5 +63,12 @@ TIFeedParser is a very simple RSS parser written in Swift, supporting Atom, RSS1
     }
 ```
 
+#### Requirements
+
+- iOS 17.0+ / watchOS 10.0+
+- Xcode 15+ (Swift 5.9)
+
+Version 3.0.0 requires iOS 17 / watchOS 10 because AEXML 4.7.2+ does. Use 2.3.x for older OS versions (note that 2.3.x depends on AEXML versions without the 4.7.3 security fix).
+
 #### Installation (CocoaPods)
 `pod TIFeedParser`
